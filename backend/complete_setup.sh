@@ -12,8 +12,23 @@ RED='\033[0;31m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+# Step 0: Install Dependencies
+echo -e "${BLUE}[0/6] Installing Dependencies...${NC}"
+if [ ! -d "node_modules" ]; then
+    npm install
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}✅ Dependencies installed successfully${NC}"
+    else
+        echo -e "${RED}❌ Failed to install dependencies${NC}"
+        exit 1
+    fi
+else
+    echo -e "${GREEN}✅ Dependencies already installed${NC}"
+fi
+echo ""
+
 # Step 1: Generate Prisma Client
-echo -e "${BLUE}[1/5] Generating Prisma Client...${NC}"
+echo -e "${BLUE}[1/6] Generating Prisma Client...${NC}"
 npx prisma generate
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}✅ Prisma Client generated successfully${NC}"
@@ -24,7 +39,7 @@ fi
 echo ""
 
 # Step 2: Run Migrations
-echo -e "${BLUE}[2/5] Running Database Migrations...${NC}"
+echo -e "${BLUE}[2/6] Running Database Migrations...${NC}"
 npx prisma migrate deploy
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}✅ Migrations completed successfully${NC}"
@@ -35,7 +50,7 @@ fi
 echo ""
 
 # Step 3: Seed Default Users
-echo -e "${BLUE}[3/5] Creating Default Users...${NC}"
+echo -e "${BLUE}[3/6] Creating Default Users...${NC}"
 node -e "
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
@@ -56,7 +71,9 @@ async function seedUsers() {
     // Create default admin user
     const admin = await prisma.user.create({
       data: {
-        name: 'Admin User',
+        firstName: 'Admin',
+        lastName: 'User',
+        displayName: 'Admin User',
         email: 'admin@saha-hms.com',
         password: hashedPassword,
         role: 'ADMIN',
@@ -69,7 +86,9 @@ async function seedUsers() {
     // Create doctor
     const doctor = await prisma.user.create({
       data: {
-        name: 'Dr. Ahmed Hassan',
+        firstName: 'Ahmed',
+        lastName: 'Hassan',
+        displayName: 'Dr. Ahmed Hassan',
         email: 'doctor@saha-hms.com',
         password: hashedPassword,
         role: 'DOCTOR',
@@ -82,7 +101,9 @@ async function seedUsers() {
     // Create nurse
     const nurse = await prisma.user.create({
       data: {
-        name: 'Nurse Fatima',
+        firstName: 'Fatima',
+        lastName: 'Al-Rashid',
+        displayName: 'Nurse Fatima',
         email: 'nurse@saha-hms.com',
         password: hashedPassword,
         role: 'NURSE',
@@ -95,10 +116,12 @@ async function seedUsers() {
     // Create receptionist
     const receptionist = await prisma.user.create({
       data: {
-        name: 'Sarah Johnson',
+        firstName: 'Sarah',
+        lastName: 'Johnson',
+        displayName: 'Sarah Johnson',
         email: 'receptionist@saha-hms.com',
         password: hashedPassword,
-        role: 'RECEPTIONIST',
+        role: 'ADMIN',
         phone: '+1234567893',
       }
     });
@@ -127,7 +150,7 @@ seedUsers();
 echo ""
 
 # Step 4: Create System Settings
-echo -e "${BLUE}[4/5] Creating System Settings...${NC}"
+echo -e "${BLUE}[4/6] Creating System Settings...${NC}"
 node -e "
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
@@ -160,8 +183,24 @@ seedSettings();
 " || echo -e "${YELLOW}⚠️  System settings creation skipped${NC}"
 echo ""
 
-# Step 5: Verify Setup
-echo -e "${BLUE}[5/5] Verifying Setup...${NC}"
+# Step 5: Install Frontend Dependencies
+echo -e "${BLUE}[5/6] Installing Frontend Dependencies...${NC}"
+cd ../frontend
+if [ ! -d "node_modules" ]; then
+    npm install
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}✅ Frontend dependencies installed${NC}"
+    else
+        echo -e "${RED}❌ Failed to install frontend dependencies${NC}"
+    fi
+else
+    echo -e "${GREEN}✅ Frontend dependencies already installed${NC}"
+fi
+cd ../backend
+echo ""
+
+# Step 6: Verify Setup
+echo -e "${BLUE}[6/6] Verifying Setup...${NC}"
 node -e "
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
