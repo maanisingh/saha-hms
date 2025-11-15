@@ -18,6 +18,8 @@ chmod +x complete_setup.sh
 ./complete_setup.sh
 ```
 
+**Note:** The script will automatically install all backend AND frontend dependencies!
+
 ### For Windows:
 
 ```cmd
@@ -25,13 +27,17 @@ cd saha-hms\backend
 complete_setup.bat
 ```
 
+**Note:** The script will automatically install all backend AND frontend dependencies!
+
 ## What the Setup Script Does
 
-1. **Generates Prisma Client** - Creates database models
-2. **Runs Migrations** - Creates all database tables
-3. **Seeds Default Users** - Creates admin, doctor, nurse, receptionist
-4. **Creates System Settings** - Configures English/LTR defaults
-5. **Verifies Setup** - Confirms everything is working
+1. **Installs Backend Dependencies** - Runs npm install automatically
+2. **Generates Prisma Client** - Creates database models
+3. **Runs Migrations** - Creates all database tables
+4. **Seeds Default Users** - Creates admin, doctor, nurse, receptionist
+5. **Creates System Settings** - Configures English/LTR defaults
+6. **Installs Frontend Dependencies** - Sets up frontend automatically
+7. **Verifies Setup** - Confirms everything is working
 
 ## Default Users Created
 
@@ -58,14 +64,11 @@ cd saha-hms
 ```bash
 cd backend
 
-# Install dependencies
-npm install
-
-# Configure environment
+# Configure environment (if .env doesn't exist)
 cp .env.example .env
 # Edit .env with your database credentials
 
-# Run complete setup (creates tables + users + settings)
+# Run complete setup (installs deps + creates tables + users + settings)
 ./complete_setup.sh     # Linux/Mac
 # OR
 complete_setup.bat      # Windows
@@ -73,6 +76,8 @@ complete_setup.bat      # Windows
 # Start backend server
 npm run dev
 ```
+
+**Note:** You don't need to run `npm install` manually - the setup script does it!
 
 Server will run on: **http://localhost:8100**
 
@@ -83,16 +88,13 @@ Open a new terminal:
 ```bash
 cd frontend
 
-# Install dependencies
-npm install
+# Frontend dependencies already installed by setup script!
+# Just start the dev server
 
-# Configure environment
-cp .env.example .env
-# Edit .env if needed (default: http://localhost:8100/api)
-
-# Start frontend
 npm run dev
 ```
+
+**Note:** The backend setup script already installed frontend dependencies!
 
 Frontend will run on: **http://localhost:5173**
 
