@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
 
 const LanguageContext = createContext();
 
@@ -15,39 +16,81 @@ export const LanguageProvider = ({ children }) => {
   const { i18n } = useTranslation();
   const [direction, setDirection] = useState('ltr');
   const [language, setLanguage] = useState('en');
+  const [loading, setLoading] = useState(true);
 
+  // Fetch global system language setting from backend
   useEffect(() => {
-    // Get saved language from localStorage or default to 'en'
-    const savedLanguage = localStorage.getItem('saha-hms-language') || 'en';
-    const savedDirection = localStorage.getItem('saha-hms-direction') || 'ltr';
+    const fetchSystemLanguage = async () => {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8100/api';
+        const response = await axios.get(`${apiUrl}/settings/system`);
 
-    setLanguage(savedLanguage);
-    setDirection(savedDirection);
+        if (response.data.success) {
+          const { defaultLanguage, defaultDirection } = response.data.data;
 
-    // Set i18n language
-    i18n.changeLanguage(savedLanguage);
+          setLanguage(defaultLanguage);
+          setDirection(defaultDirection);
 
-    // Set document direction and lang
-    document.documentElement.dir = savedDirection;
-    document.documentElement.lang = savedLanguage;
+          // Set i18n language
+          i18n.changeLanguage(defaultLanguage);
+
+          // Set document direction and lang
+          document.documentElement.dir = defaultDirection;
+          document.documentElement.lang = defaultLanguage;
+        }
+      } catch (error) {
+        console.error('Error fetching system language:', error);
+        // Fallback to English if API fails
+        setLanguage('en');
+        setDirection('ltr');
+        i18n.changeLanguage('en');
+        document.documentElement.dir = 'ltr';
+        document.documentElement.lang = 'en';
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSystemLanguage();
   }, [i18n]);
 
-  const switchLanguage = (newLang) => {
-    const newDirection = newLang === 'ar' ? 'rtl' : 'ltr';
+  // Admin function to update system-wide language
+  const updateSystemLanguage = async (newLang) => {
+    try {
+      const newDirection = newLang === 'ar' ? 'rtl' : 'ltr';
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8100/api';
+      const token = localStorage.getItem('token');
 
-    setLanguage(newLang);
-    setDirection(newDirection);
+      const response = await axios.put(
+        `${apiUrl}/settings/system/language`,
+        { language: newLang },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
 
-    // Save to localStorage
-    localStorage.setItem('saha-hms-language', newLang);
-    localStorage.setItem('saha-hms-direction', newDirection);
+      if (response.data.success) {
+        setLanguage(newLang);
+        setDirection(newDirection);
 
-    // Change i18n language (zero re-rendering, instant switch)
-    i18n.changeLanguage(newLang);
+        // Change i18n language (zero re-rendering, instant switch)
+        i18n.changeLanguage(newLang);
 
-    // Update document direction and lang
-    document.documentElement.dir = newDirection;
-    document.documentElement.lang = newLang;
+        // Update document direction and lang
+        document.documentElement.dir = newDirection;
+        document.documentElement.lang = newLang;
+
+        return { success: true, message: response.data.message };
+      }
+    } catch (error) {
+      console.error('Error updating system language:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to update system language'
+      };
+    }
   };
 
   const value = {
@@ -55,7 +98,8 @@ export const LanguageProvider = ({ children }) => {
     direction,
     isRTL: direction === 'rtl',
     isLTR: direction === 'ltr',
-    switchLanguage,
+    loading,
+    updateSystemLanguage, // Admin function to change system-wide language
   };
 
   return (

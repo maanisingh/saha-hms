@@ -45,6 +45,7 @@ import locationtrackerRoutes from "./routes/locationtrackerRoutes.js";
 import beaconRoutes from "./routes/beaconRoutes.js";
 import departmentRoutes from "./routes/departmentRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import settingsRoutes from "./routes/settingsRoutes.js";
 
 // Load environment variables
 dotenv.config();
@@ -78,6 +79,7 @@ app.use("/api/lab", labRoutes);
 // Location & Beacon Management
 app.use("/api/locationtracker", locationtrackerRoutes);
 app.use("/api/beacon", beaconRoutes);
+app.use("/api/settings", settingsRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hospital Management System Backend Running...");

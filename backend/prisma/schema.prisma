@@ -1548,3 +1548,14 @@ model LabOrder {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
+
+// System Settings for global configuration
+model SystemSettings {
+  id               Int      @id @default(autoincrement())
+  defaultLanguage  String   @default("en") // 'en' or 'ar'
+  defaultDirection String   @default("ltr") // 'ltr' or 'rtl'
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("system_settings")
+}

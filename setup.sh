@@ -12,7 +12,7 @@ if ! command -v docker &> /dev/null; then
 fi
 
 # Check if Docker Compose is installed
-if ! command -v docker-compose &> /dev/null; then
+if ! command -v docker &> /dev/null; then
     echo "❌ Docker Compose is not installed. Please install Docker Compose first."
     echo "Visit: https://docs.docker.com/compose/install/"
     exit 1
@@ -40,7 +40,7 @@ fi
 
 echo ""
 echo "🐳 Starting Docker containers..."
-docker-compose up -d
+docker compose up -d
 
 echo ""
 echo "⏳ Waiting for MySQL to be ready..."
@@ -48,11 +48,11 @@ sleep 10
 
 echo ""
 echo "🗄️  Running database migrations..."
-docker-compose exec -T backend npx prisma migrate deploy
+docker compose exec -T backend npx prisma migrate deploy
 
 echo ""
 echo "🌱 Seeding database with sample data..."
-docker-compose exec -T backend npx prisma db seed 2>/dev/null || echo "ℹ️  Seed script not found, skipping..."
+docker compose exec -T backend npx prisma db seed 2>/dev/null || echo "ℹ️  Seed script not found, skipping..."
 
 echo ""
 echo "=========================================="
@@ -69,10 +69,10 @@ echo "   Email: admin@vitalcore.com"
 echo "   Password: admin123"
 echo ""
 echo "🛠️  Useful Commands:"
-echo "   View logs: docker-compose logs -f"
-echo "   Stop: docker-compose down"
-echo "   Restart: docker-compose restart"
-echo "   Database Studio: docker-compose exec backend npx prisma studio"
+echo "   View logs: docker compose logs -f"
+echo "   Stop: docker compose down"
+echo "   Restart: docker compose restart"
+echo "   Database Studio: docker compose exec backend npx prisma studio"
 echo ""
 echo "📚 Documentation: See README.md for more information"
 echo ""
