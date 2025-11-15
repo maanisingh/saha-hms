@@ -26,8 +26,9 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-# Prisma
-prisma/migrations/*
+# Prisma - IMPORTANT: Migrations should be committed to version control
+# Only ignore the .env file, not migrations
+# prisma/migrations/* (COMMENTED OUT - migrations need to be tracked)
 
 # IDE
 .vscode/
