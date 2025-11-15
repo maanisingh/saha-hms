@@ -1,0 +1,21 @@
+{
+  "appName": "نظام صحة الطبي",
+  "dashboard": "لوحة التحكم",
+  "patients": "المرضى",
+  "appointments": "المواعيد",
+  "prescriptions": "الوصفات الطبية",
+  "pharmacy": "الصيدلية",
+  "laboratory": "المختبر",
+  "radiology": "الأشعة",
+  "billing": "الفواتير",
+  "staff": "الموظفون",
+  "userManagement": "إدارة المستخدمين",
+  "reports": "التقارير",
+  "locationTracker": "تتبع المواقع",
+  "beaconManager": "إدارة المنارات",
+  "staffAttendance": "حضور الموظفين",
+  "helpCenter": "مركز المساعدة",
+  "settings": "الإعدادات",
+  "profile": "الملف الشخصي",
+  "menu": "القائمة"
+}

@@ -1,0 +1,500 @@
+// import { useState } from "react";
+// import { Plus } from "../lib/icons";
+// import { Button } from "../components/common/Button";
+
+// export function Billing() {
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+//   const [invoices, setInvoices] = useState([
+//     {
+//       id: "1",
+//       invoiceNo: "INV-001",
+//       patientName: "John Doe",
+//       services: "Consultation, Lab Tests",
+//       amount: 1250.0,
+//       paid: 1250.0,
+//       balance: 0,
+//       date: "2024-10-28",
+//       status: "PAID",
+//     },
+//     {
+//       id: "2",
+//       invoiceNo: "INV-002",
+//       patientName: "Jane Smith",
+//       services: "MRI Scan, Consultation",
+//       amount: 3500.0,
+//       paid: 1500.0,
+//       balance: 2000.0,
+//       date: "2024-10-28",
+//       status: "PARTIAL",
+//     },
+//   ]);
+
+//   const [newInvoice, setNewInvoice] = useState({
+//     invoiceNo: "",
+//     patientName: "",
+//     services: "",
+//     amount: "",
+//     paid: "",
+//     date: "",
+//     status: "PENDING",
+//   });
+
+//   const getStatusColor = (status) => {
+//     switch (status) {
+//       case "PAID":
+//         return "bg-green-100 text-green-700";
+//       case "PARTIAL":
+//         return "bg-yellow-100 text-yellow-700";
+//       case "PENDING":
+//         return "bg-red-100 text-red-700";
+//       default:
+//         return "bg-gray-100 text-gray-700";
+//     }
+//   };
+
+//   const handleCreateInvoice = (e) => {
+//     e.preventDefault();
+//     const balance =
+//       parseFloat(newInvoice.amount || 0) - parseFloat(newInvoice.paid || 0);
+
+//     const newEntry = {
+//       id: Date.now().toString(),
+//       ...newInvoice,
+//       balance,
+//     };
+
+//     setInvoices([...invoices, newEntry]);
+//     setNewInvoice({
+//       invoiceNo: "",
+//       patientName: "",
+//       services: "",
+//       amount: "",
+//       paid: "",
+//       date: "",
+//       status: "PENDING",
+//     });
+//     setIsModalOpen(false);
+//   };
+
+//   return (
+//     <div className="space-y-6">
+//       {/* Header */}
+//       <div className="flex items-center justify-between">
+//         <div>
+//           <h1 className="text-3xl font-display font-bold text-gray-900">
+//             Billing
+//           </h1>
+//           <p className="text-gray-600 mt-1">
+//             Manage invoices and payment records
+//           </p>
+//         </div>
+//         <Button icon={Plus} onClick={() => setIsModalOpen(true)}>
+//           Create Invoice
+//         </Button>
+//       </div>
+
+//       {/* ✅ Modal */}
+//       {isModalOpen && (
+//         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+//           <div className="bg-white rounded-xl shadow-lg w-[600px] p-8 relative overflow-y-auto max-h-[90vh]">
+//             <button
+//               className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+//               onClick={() => setIsModalOpen(false)}
+//             >
+//               ✕
+//             </button>
+//             <h2 className="text-2xl font-bold mb-6">Create New Invoice</h2>
+
+//             <form className="space-y-4" onSubmit={handleCreateInvoice}>
+//               {/* Invoice Number */}
+//               <div>
+//                 <label className="block text-sm font-semibold mb-1">
+//                   Invoice Number
+//                 </label>
+//                 <input
+//                   type="text"
+//                   className="w-full border rounded-lg p-2"
+//                   value={newInvoice.invoiceNo}
+//                   onChange={(e) =>
+//                     setNewInvoice({ ...newInvoice, invoiceNo: e.target.value })
+//                   }
+//                   required
+//                 />
+//               </div>
+
+//               {/* Patient Name */}
+//               <div>
+//                 <label className="block text-sm font-semibold mb-1">
+//                   Patient Name
+//                 </label>
+//                 <input
+//                   type="text"
+//                   className="w-full border rounded-lg p-2"
+//                   value={newInvoice.patientName}
+//                   onChange={(e) =>
+//                     setNewInvoice({
+//                       ...newInvoice,
+//                       patientName: e.target.value,
+//                     })
+//                   }
+//                   required
+//                 />
+//               </div>
+
+//               {/* Services */}
+//               <div>
+//                 <label className="block text-sm font-semibold mb-1">
+//                   Services
+//                 </label>
+//                 <input
+//                   type="text"
+//                   className="w-full border rounded-lg p-2"
+//                   value={newInvoice.services}
+//                   onChange={(e) =>
+//                     setNewInvoice({ ...newInvoice, services: e.target.value })
+//                   }
+//                   required
+//                 />
+//               </div>
+
+//               {/* Amount */}
+//               <div>
+//                 <label className="block text-sm font-semibold mb-1">
+//                   Total Amount (₹)
+//                 </label>
+//                 <input
+//                   type="number"
+//                   className="w-full border rounded-lg p-2"
+//                   value={newInvoice.amount}
+//                   onChange={(e) =>
+//                     setNewInvoice({ ...newInvoice, amount: e.target.value })
+//                   }
+//                   required
+//                 />
+//               </div>
+
+//               {/* Paid */}
+//               <div>
+//                 <label className="block text-sm font-semibold mb-1">
+//                   Amount Paid (₹)
+//                 </label>
+//                 <input
+//                   type="number"
+//                   className="w-full border rounded-lg p-2"
+//                   value={newInvoice.paid}
+//                   onChange={(e) =>
+//                     setNewInvoice({ ...newInvoice, paid: e.target.value })
+//                   }
+//                 />
+//               </div>
+
+//               {/* Date */}
+//               <div>
+//                 <label className="block text-sm font-semibold mb-1">
+//                   Invoice Date
+//                 </label>
+//                 <input
+//                   type="date"
+//                   className="w-full border rounded-lg p-2"
+//                   value={newInvoice.date}
+//                   onChange={(e) =>
+//                     setNewInvoice({ ...newInvoice, date: e.target.value })
+//                   }
+//                   required
+//                 />
+//               </div>
+
+//               {/* Status */}
+//               <div>
+//                 <label className="block text-sm font-semibold mb-1">
+//                   Payment Status
+//                 </label>
+//                 <select
+//                   className="w-full border rounded-lg p-2"
+//                   value={newInvoice.status}
+//                   onChange={(e) =>
+//                     setNewInvoice({ ...newInvoice, status: e.target.value })
+//                   }
+//                 >
+//                   <option value="PENDING">Pending</option>
+//                   <option value="PARTIAL">Partial</option>
+//                   <option value="PAID">Paid</option>
+//                 </select>
+//               </div>
+
+//               {/* Submit */}
+//               <div className="pt-4">
+//                 <Button type="submit" className="w-full">
+//                   Add Invoice
+//                 </Button>
+//               </div>
+//             </form>
+//           </div>
+//         </div>
+//       )}
+
+//       {/* ✅ Table */}
+//       <div className="bg-white rounded-xl shadow overflow-hidden">
+//         <table className="w-full text-left border-collapse">
+//           <thead className="bg-gray-100">
+//             <tr>
+//               <th className="p-3">Invoice No</th>
+//               <th className="p-3">Patient</th>
+//               <th className="p-3">Services</th>
+//               <th className="p-3">Amount</th>
+//               <th className="p-3">Paid</th>
+//               <th className="p-3">Balance</th>
+//               <th className="p-3">Date</th>
+//               <th className="p-3">Status</th>
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {invoices.map((inv) => (
+//               <tr key={inv.id} className="border-t hover:bg-gray-50">
+//                 <td className="p-3">{inv.invoiceNo}</td>
+//                 <td className="p-3">{inv.patientName}</td>
+//                 <td className="p-3">{inv.services}</td>
+//                 <td className="p-3">₹{inv.amount}</td>
+//                 <td className="p-3">₹{inv.paid}</td>
+//                 <td className="p-3">₹{inv.balance}</td>
+//                 <td className="p-3">{inv.date}</td>
+//                 <td className="p-3">
+//                   <span
+//                     className={`px-2 py-1 rounded text-sm font-semibold ${getStatusColor(
+//                       inv.status
+//                     )}`}
+//                   >
+//                     {inv.status}
+//                   </span>
+//                 </td>
+//               </tr>
+//             ))}
+//           </tbody>
+//         </table>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+import { useState } from "react";
+import { Plus } from "../lib/icons";
+import { Button } from "../components/common/Button";
+
+export function Billing() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [invoices, setInvoices] = useState([
+    {
+      id: "1",
+      invoiceNo: "INV-001",
+      patientName: "John Doe",
+      services: "Consultation, Lab Tests",
+      amount: 1250.0,
+      paid: 1250.0,
+      balance: 0,
+      date: "2024-10-28",
+      status: "PAID",
+    },
+    {
+      id: "2",
+      invoiceNo: "INV-002",
+      patientName: "Jane Smith",
+      services: "MRI Scan, Consultation",
+      amount: 3500.0,
+      paid: 1500.0,
+      balance: 2000.0,
+      date: "2024-10-28",
+      status: "PARTIAL",
+    },
+  ]);
+
+  const [newInvoice, setNewInvoice] = useState({
+    invoiceNo: "",
+    patientName: "",
+    services: "",
+    amount: "",
+    paid: "",
+    date: "",
+    status: "PENDING",
+  });
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "PAID":
+        return "bg-green-100 text-green-700";
+      case "PARTIAL":
+        return "bg-yellow-100 text-yellow-700";
+      case "PENDING":
+        return "bg-red-100 text-red-700";
+      default:
+        return "bg-gray-100 text-gray-700";
+    }
+  };
+
+  const handleCreateInvoice = (e) => {
+    e.preventDefault();
+    const balance =
+      parseFloat(newInvoice.amount || 0) - parseFloat(newInvoice.paid || 0);
+
+    const newEntry = {
+      id: Date.now().toString(),
+      ...newInvoice,
+      balance,
+    };
+
+    setInvoices([...invoices, newEntry]);
+    setNewInvoice({
+      invoiceNo: "",
+      patientName: "",
+      services: "",
+      amount: "",
+      paid: "",
+      date: "",
+      status: "PENDING",
+    });
+    setIsModalOpen(false);
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* ✅ Header */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mt-10">
+        <div className="">
+          <h1 className="text-3xl font-display font-bold text-gray-900">
+            Billing
+          </h1>
+          <p className="text-gray-600 mt-1">
+            Manage invoices and payment records
+          </p>
+        </div>
+        <Button icon={Plus} onClick={() => setIsModalOpen(true)}>
+          Create Invoice
+        </Button>
+      </div>
+
+      {/* ✅ Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-xl shadow-lg w-full max-w-lg p-6 relative overflow-y-auto max-h-[90vh]">
+            <button
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+              onClick={() => setIsModalOpen(false)}
+            >
+              ✕
+            </button>
+            <h2 className="text-2xl font-bold mb-6 text-center">
+              Create New Invoice
+            </h2>
+
+            <form className="space-y-4" onSubmit={handleCreateInvoice}>
+              {/* Form Fields */}
+              {[
+                { label: "Invoice Number", name: "invoiceNo", type: "text" },
+                { label: "Patient Name", name: "patientName", type: "text" },
+                { label: "Services", name: "services", type: "text" },
+                { label: "Total Amount (₹)", name: "amount", type: "number" },
+                { label: "Amount Paid (₹)", name: "paid", type: "number" },
+                { label: "Invoice Date", name: "date", type: "date" },
+              ].map((field) => (
+                <div key={field.name}>
+                  <label className="block text-sm font-semibold mb-1">
+                    {field.label}
+                  </label>
+                  <input
+                    type={field.type}
+                    className="w-full border rounded-lg p-2"
+                    value={newInvoice[field.name]}
+                    onChange={(e) =>
+                      setNewInvoice({
+                        ...newInvoice,
+                        [field.name]: e.target.value,
+                      })
+                    }
+                    required
+                  />
+                </div>
+              ))}
+
+              {/* Payment Status */}
+              <div>
+                <label className="block text-sm font-semibold mb-1">
+                  Payment Status
+                </label>
+                <select
+                  className="w-full border rounded-lg p-2"
+                  value={newInvoice.status}
+                  onChange={(e) =>
+                    setNewInvoice({ ...newInvoice, status: e.target.value })
+                  }
+                >
+                  <option value="PENDING">Pending</option>
+                  <option value="PARTIAL">Partial</option>
+                  <option value="PAID">Paid</option>
+                </select>
+              </div>
+
+              {/* Submit */}
+              <div className="pt-4">
+                <Button type="submit" className="w-full">
+                  Add Invoice
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ✅ Table Responsive */}
+      <div className="bg-white rounded-xl shadow overflow-x-auto">
+        <table className="min-w-full text-left border-collapse text-sm md:text-base">
+          <thead className="bg-gray-100">
+            <tr>
+              {[
+                "Invoice No",
+                "Patient",
+                "Services",
+                "Amount",
+                "Paid",
+                "Balance",
+                "Date",
+                "Status",
+              ].map((head, i) => (
+                <th key={i} className="p-3 whitespace-nowrap">
+                  {head}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {invoices.map((inv) => (
+              <tr
+                key={inv.id}
+                className="border-t hover:bg-gray-50 transition-colors"
+              >
+                <td className="p-3 whitespace-nowrap">{inv.invoiceNo}</td>
+                <td className="p-3 whitespace-nowrap">{inv.patientName}</td>
+                <td className="p-3 whitespace-nowrap">{inv.services}</td>
+                <td className="p-3 whitespace-nowrap">₹{inv.amount}</td>
+                <td className="p-3 whitespace-nowrap">₹{inv.paid}</td>
+                <td className="p-3 whitespace-nowrap">₹{inv.balance}</td>
+                <td className="p-3 whitespace-nowrap">{inv.date}</td>
+                <td className="p-3 whitespace-nowrap">
+                  <span
+                    className={`px-2 py-1 rounded text-sm font-semibold ${getStatusColor(
+                      inv.status
+                    )}`}
+                  >
+                    {inv.status}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+

@@ -1,0 +1,21 @@
+{
+  "appName": "Saha HMS",
+  "dashboard": "Dashboard",
+  "patients": "Patients",
+  "appointments": "Appointments",
+  "prescriptions": "Prescriptions",
+  "pharmacy": "Pharmacy",
+  "laboratory": "Laboratory",
+  "radiology": "Radiology",
+  "billing": "Billing",
+  "staff": "Staff",
+  "userManagement": "User Management",
+  "reports": "Reports",
+  "locationTracker": "Location Tracker",
+  "beaconManager": "Beacon Manager",
+  "staffAttendance": "Staff Attendance",
+  "helpCenter": "Help Center",
+  "settings": "Settings",
+  "profile": "Profile",
+  "menu": "Menu"
+}
