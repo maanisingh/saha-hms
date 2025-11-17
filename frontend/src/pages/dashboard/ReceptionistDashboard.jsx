@@ -27,7 +27,7 @@
 //       <div className="flex items-center justify-between">
 //         <div>
 //           <h1 className="text-3xl font-display font-bold text-gray-900">
-//             Reception Dashboard
+//             {t('title')}
 //           </h1>
 //           <p className="text-gray-600 mt-1">
 //             Manage patient registration and appointments
@@ -56,7 +56,7 @@
 //           color="purple"
 //         />
 //         <StatsCard title="Checked In" value="32" icon={Users} color="teal" />
-//         <StatsCard title="Waiting" value="8" icon={Clock} color="orange" />
+//         <StatsCard title={t('waiting')} value="8" icon={Clock} color="orange" />
 //         <StatsCard
 //           title="Collections"
 //           value="$8,340"
@@ -202,6 +202,7 @@ import { StatsCard } from "../../components/common/StatsCard";
 import { Button } from "../../components/common/Button";
 import { PatientRegistrationForm } from "../../components/forms/PatientRegistrationForm";
 import { Modal } from "../../components/common/Modal";
+import { useTranslation } from 'react-i18next';
 
 export default function ReceptionistDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -216,7 +217,7 @@ export default function ReceptionistDashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-10">
         <div>
           <h1 className="text-2xl sm:text-3xl font-display font-bold text-gray-900">
-            Reception Dashboard
+            {t('title')}
           </h1>
           <p className="text-gray-600 mt-1 text-sm sm:text-base">
             Manage patient registration and appointments
@@ -246,7 +247,7 @@ export default function ReceptionistDashboard() {
           color="purple"
         />
         <StatsCard title="Checked In" value="32" icon={Users} color="teal" />
-        <StatsCard title="Waiting" value="8" icon={Clock} color="orange" />
+        <StatsCard title={t('waiting')} value="8" icon={Clock} color="orange" />
         <StatsCard
           title="Collections"
           value="$8,340"

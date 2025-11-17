@@ -18,10 +18,29 @@ export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState('en');
   const [loading, setLoading] = useState(true);
 
-  // Fetch global system language setting from backend
+  // Initialize language from localStorage or backend
   useEffect(() => {
-    const fetchSystemLanguage = async () => {
+    const initializeLanguage = async () => {
       try {
+        // FIRST: Check localStorage (highest priority)
+        const savedLanguage = localStorage.getItem('saha-hms-language');
+
+        if (savedLanguage && (savedLanguage === 'en' || savedLanguage === 'ar')) {
+          // Use saved language from localStorage
+          const savedDirection = savedLanguage === 'ar' ? 'rtl' : 'ltr';
+
+          setLanguage(savedLanguage);
+          setDirection(savedDirection);
+          i18n.changeLanguage(savedLanguage);
+          document.documentElement.dir = savedDirection;
+          document.documentElement.lang = savedLanguage;
+
+          console.log(`[LanguageContext] Loaded language from localStorage: ${savedLanguage}`);
+          setLoading(false);
+          return;
+        }
+
+        // SECOND: Try to fetch from backend API (if no localStorage)
         const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8100/api';
         const response = await axios.get(`${apiUrl}/settings/system`);
 
@@ -30,17 +49,15 @@ export const LanguageProvider = ({ children }) => {
 
           setLanguage(defaultLanguage);
           setDirection(defaultDirection);
-
-          // Set i18n language
           i18n.changeLanguage(defaultLanguage);
-
-          // Set document direction and lang
           document.documentElement.dir = defaultDirection;
           document.documentElement.lang = defaultLanguage;
+
+          console.log(`[LanguageContext] Loaded language from API: ${defaultLanguage}`);
         }
       } catch (error) {
-        console.error('Error fetching system language:', error);
-        // Fallback to English if API fails
+        // THIRD: Fallback to English only if both localStorage and API fail
+        console.debug('[LanguageContext] Using default language (en) - no saved preference or API unavailable');
         setLanguage('en');
         setDirection('ltr');
         i18n.changeLanguage('en');
@@ -51,44 +68,55 @@ export const LanguageProvider = ({ children }) => {
       }
     };
 
-    fetchSystemLanguage();
+    initializeLanguage();
   }, [i18n]);
 
-  // Admin function to update system-wide language
+  // Update language (client-side with optional server sync for admins)
   const updateSystemLanguage = async (newLang) => {
     try {
       const newDirection = newLang === 'ar' ? 'rtl' : 'ltr';
+
+      // Always update client-side immediately
+      setLanguage(newLang);
+      setDirection(newDirection);
+      i18n.changeLanguage(newLang);
+      document.documentElement.dir = newDirection;
+      document.documentElement.lang = newLang;
+
+      // Try to sync with server if user is logged in (optional)
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8100/api';
       const token = localStorage.getItem('token');
 
-      const response = await axios.put(
-        `${apiUrl}/settings/system/language`,
-        { language: newLang },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
+      if (token) {
+        try {
+          const response = await axios.put(
+            `${apiUrl}/settings/system/language`,
+            { language: newLang },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            }
+          );
+
+          if (response.data.success) {
+            return { success: true, message: response.data.message };
           }
+        } catch (apiError) {
+          // Silently fail API sync - client-side change already applied
+          console.debug('Server language sync skipped (not logged in or no permission)');
         }
-      );
-
-      if (response.data.success) {
-        setLanguage(newLang);
-        setDirection(newDirection);
-
-        // Change i18n language (zero re-rendering, instant switch)
-        i18n.changeLanguage(newLang);
-
-        // Update document direction and lang
-        document.documentElement.dir = newDirection;
-        document.documentElement.lang = newLang;
-
-        return { success: true, message: response.data.message };
       }
+
+      return {
+        success: true,
+        message: `Language changed to ${newLang === 'ar' ? 'Arabic' : 'English'}`
+      };
     } catch (error) {
-      console.error('Error updating system language:', error);
+      console.error('Error updating language:', error);
       return {
         success: false,
-        message: error.response?.data?.message || 'Failed to update system language'
+        message: 'Failed to update language'
       };
     }
   };

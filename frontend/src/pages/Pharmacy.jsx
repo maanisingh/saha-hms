@@ -443,11 +443,13 @@
 import React, { useState, useEffect } from "react";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import { Button } from "../components/common/Button";
+import { useTranslation } from 'react-i18next';
 
 // ✅ API Base URL (backend ka)
 const API_URL = "http://localhost:5000/api/medicines";
 
 export default function Pharmacy() {
+  const { t } = useTranslation('pharmacy');
   const [medicines, setMedicines] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -500,7 +502,7 @@ export default function Pharmacy() {
 
       const data = await res.json();
       if (res.ok) {
-        alert("✅ Medicine added successfully!");
+        alert(`✅ ${t('medicineAddedSuccess')}`);
         setShowModal(false);
         setFormData({
           brandName: "",
@@ -516,7 +518,7 @@ export default function Pharmacy() {
         });
         fetchMedicines();
       } else {
-        alert(`❌ Error: ${data.message}`);
+        alert(`❌ ${t('addMedicineError')}: ${data.message}`);
       }
     } catch (error) {
       console.error("Error adding medicine:", error);
@@ -525,7 +527,7 @@ export default function Pharmacy() {
 
   // ✅ Delete medicine
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this medicine?")) return;
+    if (!window.confirm(t('deleteConfirm'))) return;
     try {
       await fetch(`${API_URL}/${id}`, { method: "DELETE" });
       fetchMedicines();
@@ -539,34 +541,34 @@ export default function Pharmacy() {
 
       {/* ✅ Header */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-        <h1 className="text-2xl sm:text-3xl font-bold">Pharmacy Management</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
 
         <Button
           onClick={() => setShowModal(true)}
           className="flex items-center px-4 py-2 rounded-lg"
         >
           <FaPlus className="mr-2" />
-          Add Medicine
+          {t('addMedicine')}
         </Button>
       </div>
 
       {/* ✅ Table Wrapper */}
       {loading ? (
-        <p className="text-center text-gray-600">Loading...</p>
+        <p className="text-center text-gray-600">{t('loading')}</p>
       ) : (
         <div className="overflow-x-auto bg-white rounded-xl border border-gray-200 shadow-lg w-full">
 
           <table className="min-w-full text-xs sm:text-sm md:text-base">
             <thead className="bg-gray-200 rounded-t-xl">
               <tr>
-                <th className="p-3 border">ID</th>
-                <th className="p-3 border">Brand Name</th>
-                <th className="p-3 border">Generic Name</th>
-                <th className="p-3 border">Strength</th>
-                <th className="p-3 border">Stock</th>
-                <th className="p-3 border">Status</th>
-                <th className="p-3 border">Expiry</th>
-                <th className="p-3 border">Actions</th>
+                <th className="p-3 border">{t('id')}</th>
+                <th className="p-3 border">{t('brandName')}</th>
+                <th className="p-3 border">{t('genericName')}</th>
+                <th className="p-3 border">{t('strength')}</th>
+                <th className="p-3 border">{t('stock')}</th>
+                <th className="p-3 border">{t('status')}</th>
+                <th className="p-3 border">{t('expiry')}</th>
+                <th className="p-3 border">{t('actions')}</th>
               </tr>
             </thead>
 
@@ -604,7 +606,7 @@ export default function Pharmacy() {
               ) : (
                 <tr>
                   <td colSpan="8" className="p-6 text-center text-gray-500">
-                    No medicines found.
+                    {t('noMedicinesFound')}
                   </td>
                 </tr>
               )}
@@ -621,29 +623,29 @@ export default function Pharmacy() {
           <div className="bg-white rounded-xl shadow-xl w-full max-w-lg border border-gray-200 p-6 max-h-[90vh] overflow-y-auto">
 
             <h2 className="text-xl font-semibold mb-4 text-purple-700">
-              Add New Medicine
+              {t('addNewMedicine')}
             </h2>
 
             <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
 
-              <input type="text" name="brandName" placeholder="Brand Name" value={formData.brandName} onChange={handleChange} required className="border p-2 rounded-lg" />
-              <input type="text" name="genericName" placeholder="Generic Name" value={formData.genericName} onChange={handleChange} required className="border p-2 rounded-lg" />
-              <input type="text" name="strength" placeholder="Strength" value={formData.strength} onChange={handleChange} required className="border p-2 rounded-lg" />
-              <input type="number" name="stock" placeholder="Stock" value={formData.stock} onChange={handleChange} className="border p-2 rounded-lg" />
-              <input type="number" name="reorderLevel" placeholder="Reorder Level" value={formData.reorderLevel} onChange={handleChange} className="border p-2 rounded-lg" />
+              <input type="text" name="brandName" placeholder={t('brandNamePlaceholder')} value={formData.brandName} onChange={handleChange} required className="border p-2 rounded-lg" />
+              <input type="text" name="genericName" placeholder={t('genericNamePlaceholder')} value={formData.genericName} onChange={handleChange} required className="border p-2 rounded-lg" />
+              <input type="text" name="strength" placeholder={t('strengthPlaceholder')} value={formData.strength} onChange={handleChange} required className="border p-2 rounded-lg" />
+              <input type="number" name="stock" placeholder={t('stockPlaceholder')} value={formData.stock} onChange={handleChange} className="border p-2 rounded-lg" />
+              <input type="number" name="reorderLevel" placeholder={t('reorderLevelPlaceholder')} value={formData.reorderLevel} onChange={handleChange} className="border p-2 rounded-lg" />
               <input type="date" name="expiryDate" value={formData.expiryDate} onChange={handleChange} className="border p-2 rounded-lg" />
-              <input type="text" name="manufacturer" placeholder="Manufacturer" value={formData.manufacturer} onChange={handleChange} className="border p-2 rounded-lg" />
-              <input type="text" name="batchNumber" placeholder="Batch No." value={formData.batchNumber} onChange={handleChange} className="border p-2 rounded-lg" />
+              <input type="text" name="manufacturer" placeholder={t('manufacturerPlaceholder')} value={formData.manufacturer} onChange={handleChange} className="border p-2 rounded-lg" />
+              <input type="text" name="batchNumber" placeholder={t('batchNumberPlaceholder')} value={formData.batchNumber} onChange={handleChange} className="border p-2 rounded-lg" />
 
               <select name="status" value={formData.status} onChange={handleChange} className="border p-2 rounded-lg">
-                <option value="IN_STOCK">In Stock</option>
-                <option value="OUT_OF_STOCK">Out of Stock</option>
+                <option value="IN_STOCK">{t('inStock')}</option>
+                <option value="OUT_OF_STOCK">{t('outOfStock')}</option>
               </select>
 
               <input
                 type="text"
                 name="notes"
-                placeholder="Notes"
+                placeholder={t('notesPlaceholder')}
                 value={formData.notes}
                 onChange={handleChange}
                 className="border p-2 rounded-lg sm:col-span-2"
@@ -655,14 +657,14 @@ export default function Pharmacy() {
                   onClick={() => setShowModal(false)}
                   className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg"
                 >
-                  Cancel
+                  {t('cancel')}
                 </Button>
 
                 <Button
                   type="submit"
                   className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg"
                 >
-                  Save
+                  {t('save')}
                 </Button>
               </div>
 

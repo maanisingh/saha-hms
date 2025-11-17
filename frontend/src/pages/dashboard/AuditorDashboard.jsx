@@ -397,8 +397,10 @@ import {
 import { StatsCard } from "../../components/common/StatsCard";
 import { Button } from "../../components/common/Button";
 import { DataTable } from "../../components/common/DataTable";
+import { useTranslation } from 'react-i18next';
 
 export function AuditorDashboard() {
+  const { t } = useTranslation('auditorDashboard');
   const recentAuditLogs = [
     {
       id: 1,

@@ -199,36 +199,39 @@ import {
 import { StatsCard } from "../../components/common/StatsCard";
 import { Button } from "../../components/common/Button";
 import { DataTable } from "../../components/common/DataTable";
+import { useTranslation } from 'react-i18next';
 
 export function LabTechDashboard() {
+  const { t } = useTranslation('labTechDashboard');
+
   return (
     <div className="space-y-6 px-2 sm:px-4 md:px-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-10">
         <div>
           <h1 className="text-2xl sm:text-3xl font-display font-bold text-gray-900">
-            Laboratory Dashboard
+            {t('title')}
           </h1>
           <p className="text-gray-600 mt-1 text-sm sm:text-base">
-            Test management and results
+            {t('subtitle')}
           </p>
         </div>
         <div className="flex flex-wrap gap-2 sm:gap-3">
           <Button variant="outline" icon={FlaskConical}>
-            Collect Sample
+            {t('collectSample')}
           </Button>
           <Button variant="primary" icon={Upload}>
-            Upload Results
+            {t('uploadResults')}
           </Button>
         </div>
       </div>
 
       {/* Stats Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
-        <StatsCard title="Pending Tests" value="23" icon={Clock} color="orange" />
-        <StatsCard title="In Progress" value="15" icon={FlaskConical} color="purple" />
-        <StatsCard title="Completed Today" value="42" icon={CheckCircle} color="green" />
-        <StatsCard title="Critical Results" value="3" icon={AlertCircle} color="red" />
+        <StatsCard title={t('pendingTests')} value="23" icon={Clock} color="orange" />
+        <StatsCard title={t('inProgress')} value="15" icon={FlaskConical} color="purple" />
+        <StatsCard title={t('completedToday')} value="42" icon={CheckCircle} color="green" />
+        <StatsCard title={t('criticalResults')} value="3" icon={AlertCircle} color="red" />
       </div>
 
       {/* Main Grid */}
@@ -236,7 +239,7 @@ export function LabTechDashboard() {
         {/* Left Section */}
         <div className="bg-white/60 backdrop-blur-md rounded-xl shadow-soft p-4 sm:p-6 border border-gray-100">
           <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">
-            Pending Sample Collection
+            {t('pendingSampleCollection')}
           </h2>
           <div className="space-y-3">
             {[1, 2, 3, 4, 5].map((i) => (
@@ -246,29 +249,29 @@ export function LabTechDashboard() {
               >
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-2 gap-2">
                   <div>
-                    <p className="font-medium text-gray-900">Order #{3000 + i}</p>
+                    <p className="font-medium text-gray-900">{t('order')} #{3000 + i}</p>
                     <p className="text-sm text-gray-600">
-                      Patient: John Doe - UPID: P{1000 + i}
+                      {t('patient')}: John Doe - UPID: P{1000 + i}
                     </p>
                     <p className="text-sm text-gray-600">
-                      Ordered by: Dr. Smith
+                      {t('orderedBy')}: Dr. Smith
                     </p>
                   </div>
                   <span className="self-start sm:self-center px-2 py-1 bg-blue-200 text-blue-800 rounded-full text-xs font-medium">
-                    Urgent
+                    {t('urgent')}
                   </span>
                 </div>
                 <div className="mb-3">
-                  <p className="text-sm font-medium">Tests:</p>
+                  <p className="text-sm font-medium">{t('tests')}:</p>
                   <p className="text-sm">• Complete Blood Count (CBC)</p>
                   <p className="text-sm">• Blood Sugar (Fasting)</p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2">
                   <Button size="sm" variant="primary" className="flex-1">
-                    Collect Sample
+                    {t('collectSample')}
                   </Button>
                   <Button size="sm" variant="outline" className="flex-1">
-                    View Order
+                    {t('viewOrder')}
                   </Button>
                 </div>
               </div>

@@ -16,7 +16,7 @@
 //       <div className="flex items-center justify-between">
 //         <div>
 //           <h1 className="text-3xl font-display font-bold text-gray-900">
-//             Radiology Dashboard
+//             {t('title')}
 //           </h1>
 //           <p className="text-gray-600 mt-1">Imaging requests and reporting</p>
 //         </div>
@@ -32,7 +32,7 @@
 
 //       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 //         <StatsCard
-//           title="Pending Scans"
+//           title={t('pendingScans')}
 //           value="16"
 //           icon={Clock}
 //           color="orange"
@@ -44,7 +44,7 @@
 //           color="purple"
 //         />
 //         <StatsCard
-//           title="Completed Today"
+//           title={t('completedToday')}
 //           value="25"
 //           icon={CheckCircle}
 //           color="green"
@@ -230,15 +230,17 @@ import {
 import { StatsCard } from "../../components/common/StatsCard";
 import { Button } from "../../components/common/Button";
 import { DataTable } from "../../components/common/DataTable";
+import { useTranslation } from 'react-i18next';
 
 export function RadiologistDashboard() {
+  const { t } = useTranslation('radiologistDashboard');
   return (
     <div className="space-y-6 px-3 sm:px-4 md:px-6">
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-10">
         <div>
           <h1 className="text-2xl sm:text-3xl font-display font-bold text-gray-900">
-            Radiology Dashboard
+            {t('title')}
           </h1>
           <p className="text-gray-600 mt-1 text-sm sm:text-base">
             Imaging requests and reporting
@@ -256,9 +258,9 @@ export function RadiologistDashboard() {
 
       {/* Stats Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        <StatsCard title="Pending Scans" value="16" icon={Clock} color="orange" />
+        <StatsCard title={t('pendingScans')} value="16" icon={Clock} color="orange" />
         <StatsCard title="Pending Reports" value="8" icon={FileText} color="purple" />
-        <StatsCard title="Completed Today" value="25" icon={CheckCircle} color="green" />
+        <StatsCard title={t('completedToday')} value="25" icon={CheckCircle} color="green" />
         <StatsCard title="Urgent Cases" value="4" icon={Activity} color="red" />
       </div>
 

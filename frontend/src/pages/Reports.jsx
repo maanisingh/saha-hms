@@ -276,58 +276,60 @@ import {
   Users,
 } from "../lib/icons";
 import { Button } from "../components/common/Button";
+import { useTranslation } from 'react-i18next';
 
 export function Reports() {
+  const { t } = useTranslation('reports');
   const [selectedReport, setSelectedReport] = useState("");
   const [dateRange, setDateRange] = useState({ from: "", to: "" });
 
   const reportCategories = [
     {
-      title: "Financial Reports",
+      title: t('financialReports'),
       icon: DollarSign,
       color: "green",
       reports: [
-        "Daily Revenue Report",
-        "Monthly Revenue Summary",
-        "Department-wise Revenue",
-        "Payment Collection Report",
-        "Outstanding Invoices",
+        t('dailyRevenueReport'),
+        t('monthlyRevenueSummary'),
+        t('departmentwiseRevenue'),
+        t('paymentCollectionReport'),
+        t('outstandingInvoices'),
       ],
     },
     {
-      title: "Clinical Reports",
+      title: t('clinicalReports'),
       icon: ClipboardList,
       color: "blue",
       reports: [
-        "Patient Admission Report",
-        "Discharge Summary Report",
-        "Surgery Report",
-        "Lab Test Report",
-        "Radiology Report",
+        t('patientAdmissionReport'),
+        t('dischargeSummaryReport'),
+        t('surgeryReport'),
+        t('labTestReport'),
+        t('radiologyReport'),
       ],
     },
     {
-      title: "Operational Reports",
+      title: t('operationalReports'),
       icon: TrendingUp,
       color: "purple",
       reports: [
-        "Appointment Statistics",
-        "Bed Occupancy Report",
-        "Staff Attendance Report",
-        "Department Performance",
-        "Service Utilization Report",
+        t('appointmentStatistics'),
+        t('bedOccupancyReport'),
+        t('staffAttendanceReport'),
+        t('departmentPerformance'),
+        t('serviceUtilizationReport'),
       ],
     },
     {
-      title: "Administrative Reports",
+      title: t('administrativeReports'),
       icon: Users,
       color: "orange",
       reports: [
-        "Patient Demographics",
-        "Staff Directory",
-        "Inventory Status",
-        "Compliance Report",
-        "Audit Trail Report",
+        t('patientDemographics'),
+        t('staffDirectory'),
+        t('inventoryStatus'),
+        t('complianceReport'),
+        t('auditTrailReport'),
       ],
     },
   ];
@@ -338,10 +340,10 @@ export function Reports() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
           <h1 className="text-2xl sm:text-3xl font-display font-bold text-gray-900 mt-10">
-            Reports & Analytics
+            {t('title')}
           </h1>
           <p className="text-gray-600 mt-1 text-sm sm:text-base">
-            Generate and download various hospital reports
+            {t('subtitle')}
           </p>
         </div>
       </div>
@@ -350,20 +352,20 @@ export function Reports() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           {
-            label: "Total Reports",
+            label: t('totalReports'),
             value: "1,234",
             icon: ClipboardList,
             color: "blue",
           },
-          { label: "This Month", value: "156", icon: Calendar, color: "green" },
+          { label: t('thisMonth'), value: "156", icon: Calendar, color: "green" },
           {
-            label: "Downloaded",
+            label: t('downloaded'),
             value: "892",
             icon: Download,
             color: "purple",
           },
           {
-            label: "Scheduled",
+            label: t('scheduled'),
             value: "24",
             icon: TrendingUp,
             color: "orange",
@@ -391,20 +393,20 @@ export function Reports() {
       {/* Generate Report Section */}
       <div className="bg-white/60 backdrop-blur-md rounded-xl shadow-soft p-6 border border-gray-100">
         <h2 className="text-xl font-bold text-gray-900 mb-4">
-          Generate Report
+          {t('generateReport')}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Report Type */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Report Type
+              {t('reportType')}
             </label>
             <select
               value={selectedReport}
               onChange={(e) => setSelectedReport(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
             >
-              <option value="">Select a report type</option>
+              <option value="">{t('selectReportType')}</option>
               {reportCategories.map((category) =>
                 category.reports.map((report, index) => (
                   <option key={`${category.title}-${index}`} value={report}>
@@ -418,7 +420,7 @@ export function Reports() {
           {/* From Date */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              From Date
+              {t('fromDate')}
             </label>
             <input
               type="date"
@@ -433,7 +435,7 @@ export function Reports() {
           {/* To Date */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              To Date
+              {t('toDate')}
             </label>
             <input
               type="date"
@@ -448,9 +450,9 @@ export function Reports() {
 
         {/* Buttons */}
         <div className="mt-4 flex flex-col sm:flex-row gap-3">
-          <Button icon={Download}>Generate & Download</Button>
+          <Button icon={Download}>{t('generateDownload')}</Button>
           <button className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
-            Preview
+            {t('preview')}
           </button>
         </div>
       </div>
@@ -495,26 +497,26 @@ export function Reports() {
 
       {/* Recent Reports */}
       <div className="bg-white/60 backdrop-blur-md rounded-xl shadow-soft p-6 border border-gray-100">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Recent Reports</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">{t('recentReports')}</h2>
         <div className="space-y-3">
           {[
             {
-              name: "Daily Revenue Report",
+              name: t('dailyRevenueReport'),
               date: "2024-10-28",
               size: "2.4 MB",
             },
             {
-              name: "Patient Admission Report",
+              name: t('patientAdmissionReport'),
               date: "2024-10-28",
               size: "1.8 MB",
             },
             {
-              name: "Staff Attendance Report",
+              name: t('staffAttendanceReport'),
               date: "2024-10-27",
               size: "890 KB",
             },
             {
-              name: "Department Performance",
+              name: t('departmentPerformance'),
               date: "2024-10-27",
               size: "3.2 MB",
             },
@@ -532,7 +534,7 @@ export function Reports() {
                     {report.name}
                   </p>
                   <p className="text-xs sm:text-sm text-gray-600">
-                    Generated on {report.date} • {report.size}
+                    {t('generatedOn')} {report.date} • {report.size}
                   </p>
                 </div>
               </div>

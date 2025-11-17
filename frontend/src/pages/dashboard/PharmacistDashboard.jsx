@@ -59,35 +59,35 @@
 //       <div className="flex items-center justify-between">
 //         <div>
 //           <h1 className="text-3xl font-display font-bold text-gray-900">
-//             Pharmacist Dashboard
+//             {t('title')}
 //           </h1>
 //           <p className="text-gray-600 mt-1">
-//             Manage prescriptions and inventory
+//             {t('subtitle')}
 //           </p>
 //         </div>
 //       </div>
 
 //       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 //         <StatsCard
-//           title="Total Prescriptions"
+//           title={t('totalPrescriptions')}
 //           value={stats.total.toString()}
 //           icon={Pill}
 //           color="blue"
 //         />
 //         <StatsCard
-//           title="Pending"
+//           title={t('pending')}
 //           value={stats.pending.toString()}
 //           icon={Package}
 //           color="yellow"
 //         />
 //         <StatsCard
-//           title="Dispensed Today"
+//           title={t('dispensedToday')}
 //           value={stats.dispensed.toString()}
 //           icon={CheckCircle}
 //           color="green"
 //         />
 //         <StatsCard
-//           title="Low Stock Items"
+//           title={t('lowStockItems')}
 //           value={stats.lowStock.toString()}
 //           icon={AlertCircle}
 //           color="red"
@@ -165,7 +165,7 @@
 
 //         <div className="space-y-6">
 //           <div className="bg-white/60 backdrop-blur-md rounded-xl shadow-soft p-6 border border-gray-100">
-//             <h3 className="font-bold text-gray-900 mb-4">Quick Actions</h3>
+//             <h3 className="font-bold text-gray-900 mb-4"{t('quickActions')}</h3>
 //             <div className="space-y-2">
 //               <a href="/dashboard/prescriptions">
 //                 <Button variant="outline" className="w-full justify-start">
@@ -183,7 +183,7 @@
 //           </div>
 
 //           <div className="bg-white/60 backdrop-blur-md rounded-xl shadow-soft p-6 border border-gray-100">
-//             <h3 className="font-bold text-gray-900 mb-4">Today's Summary</h3>
+//             <h3 className="font-bold text-gray-900 mb-4"{t('todaysSummary')}</h3>
 //             <div className="space-y-3">
 //               <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
 //                 <span className="text-sm font-medium">Total</span>
@@ -217,8 +217,10 @@ import { StatsCard } from "../../components/common/StatsCard";
 import { Button } from "../../components/common/Button";
 import { DataTable } from "../../components/common/DataTable";
 import { prescriptionsApi } from "../../services/api/prescriptions";
+import { useTranslation } from 'react-i18next';
 
 export function PharmacistDashboard() {
+  const { t } = useTranslation('pharmacistDashboard');
   const [prescriptions, setPrescriptions] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -273,20 +275,20 @@ export function PharmacistDashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-10">
         <div>
           <h1 className="text-2xl sm:text-3xl font-display font-bold text-gray-900">
-            Pharmacist Dashboard
+            {t('title')}
           </h1>
           <p className="text-gray-600 mt-1 text-sm sm:text-base">
-            Manage prescriptions and inventory
+            {t('subtitle')}
           </p>
         </div>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatsCard title="Total Prescriptions" value={stats.total.toString()} icon={Pill} color="blue" />
-        <StatsCard title="Pending" value={stats.pending.toString()} icon={Package} color="yellow" />
-        <StatsCard title="Dispensed Today" value={stats.dispensed.toString()} icon={CheckCircle} color="green" />
-        <StatsCard title="Low Stock Items" value={stats.lowStock.toString()} icon={AlertCircle} color="red" />
+        <StatsCard title={t('totalPrescriptions')} value={stats.total.toString()} icon={Pill} color="blue" />
+        <StatsCard title={t('pending')} value={stats.pending.toString()} icon={Package} color="yellow" />
+        <StatsCard title={t('dispensedToday')} value={stats.dispensed.toString()} icon={CheckCircle} color="green" />
+        <StatsCard title={t('lowStockItems')} value={stats.lowStock.toString()} icon={AlertCircle} color="red" />
       </div>
 
       {/* Main Layout */}

@@ -13,8 +13,10 @@ import {
   ArrowRight,
   MessageCircle
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Help = () => {
+  const { t } = useTranslation('help');
   const [selectedSection, setSelectedSection] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -1023,7 +1025,7 @@ Internal server error
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-3">
             <HelpCircle className="w-10 h-10 text-hospital-purple" />
-            <h1 className="text-4xl font-bold text-gray-900">Help Center</h1>
+            <h1 className="text-4xl font-bold text-gray-900">{t('title')}</h1>
           </div>
           <p className="text-gray-600 text-lg">Find answers, guides, and documentation for HMS</p>
         </div>
@@ -1034,7 +1036,7 @@ Internal server error
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Search help topics, guides, or documentation..."
+              placeholder={t('searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-hospital-purple focus:border-transparent text-lg"

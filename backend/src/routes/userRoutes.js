@@ -1,10 +1,11 @@
 import express from "express";
 import prisma from "../config/prismaClient.js";
+import { authenticateToken } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-// Get all users
-router.get("/", async (req, res) => {
+// Get all users (requires authentication)
+router.get("/", authenticateToken, async (req, res) => {
   try {
     const users = await prisma.user.findMany({
       select: {
@@ -32,7 +33,7 @@ router.get("/", async (req, res) => {
 });
 
 // Get user profile (current logged-in user)
-router.get("/profile", async (req, res) => {
+router.get("/profile", authenticateToken, async (req, res) => {
   try {
     if (!req.user || !req.user.id) {
       return res.status(401).json({ message: "Unauthorized" });
@@ -68,8 +69,8 @@ router.get("/profile", async (req, res) => {
   }
 });
 
-// Get user by ID
-router.get("/:id", async (req, res) => {
+// Get user by ID (requires authentication)
+router.get("/:id", authenticateToken, async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: parseInt(req.params.id) },

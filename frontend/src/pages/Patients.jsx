@@ -1262,6 +1262,7 @@ import { DataTable } from "../components/common/DataTable";
 import { Modal } from "../components/common/Modal";
 import { PatientRegistrationForm } from "../components/forms/PatientRegistrationForm";
 import { getApiUrl } from "../config/api";
+import { useTranslation } from 'react-i18next';
 
 const normalizePatientKeys = (p) => ({
   ...p,
@@ -1282,6 +1283,7 @@ const normalizePatientKeys = (p) => ({
 });
 
 export function Patients() {
+  const { t } = useTranslation('patients');
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -1345,7 +1347,7 @@ export function Patients() {
 
   // ✅ Delete patient
   const handleDeletePatient = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this patient?")) return;
+    if (!window.confirm(t('deleteConfirm'))) return;
 
     try {
       const token = localStorage.getItem("auth_token");
@@ -1367,15 +1369,15 @@ export function Patients() {
   );
 
   if (loading)
-    return <p className="text-center py-8 text-gray-500">Loading patients...</p>;
+    return <p className="text-center py-8 text-gray-500">{t('loadingPatients')}</p>;
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3 mt-10">
         <div>
-          <h1 className="text-3xl font-display font-bold text-gray-900">Patients</h1>
-          <p className="text-gray-600 mt-1">Manage patient records and information</p>
+          <h1 className="text-3xl font-display font-bold text-gray-900">{t('title')}</h1>
+          <p className="text-gray-600 mt-1">{t('subtitle')}</p>
         </div>
         <Button
           icon={Plus}
@@ -1384,16 +1386,16 @@ export function Patients() {
             setIsModalOpen(true);
           }}
         >
-          Register New Patient
+          {t('registerNewPatient')}
         </Button>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {[
-          { label: "Total Patients", value: patients.length, color: "blue" },
-          { label: "OPD Patients", value: patients.filter((p) => p.status === "OPD").length, color: "green" },
-          { label: "IPD Patients", value: patients.filter((p) => p.status === "IPD").length, color: "orange" },
+          { labelKey: "totalPatients", value: patients.length, color: "blue" },
+          { labelKey: "opdPatients", value: patients.filter((p) => p.status === "OPD").length, color: "green" },
+          { labelKey: "ipdPatients", value: patients.filter((p) => p.status === "IPD").length, color: "orange" },
         ].map((stat, i) => (
           <div
             key={i}
@@ -1401,7 +1403,7 @@ export function Patients() {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">{stat.label}</p>
+                <p className="text-sm text-gray-600">{t(stat.labelKey)}</p>
                 <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
               </div>
               <div className={`p-3 bg-${stat.color}-100 rounded-lg`}>
@@ -1419,7 +1421,7 @@ export function Patients() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Search by name, UPID, or phone..."
+              placeholder={t('searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -1428,19 +1430,19 @@ export function Patients() {
         </div>
 
         {filteredPatients.length === 0 ? (
-          <p className="text-gray-500 text-center py-8">No patients found. Register a new one!</p>
+          <p className="text-gray-500 text-center py-8">{t('noPatients')}</p>
         ) : (
           <div className="overflow-x-auto">
             <DataTable
               data={filteredPatients}
               columns={[
-                { header: "UPID", accessor: "upid" },
-                { header: "Name", accessor: (r) => `${r.firstName || ""} ${r.lastName || ""}` },
-                { header: "Phone", accessor: "phone" },
-                { header: "Age", accessor: (r) => calculateAge(r.dateOfBirth) },
-                { header: "Gender", accessor: "gender" },
+                { header: t('upid'), accessor: "upid" },
+                { header: t('name'), accessor: (r) => `${r.firstName || ""} ${r.lastName || ""}` },
+                { header: t('phone'), accessor: "phone" },
+                { header: t('age'), accessor: (r) => calculateAge(r.dateOfBirth) },
+                { header: t('gender'), accessor: "gender" },
                 {
-                  header: "Status",
+                  header: t('status'),
                   accessor: (r) => {
                     let color = "bg-gray-100 text-gray-700";
                     if (r.status === "OPD") color = "bg-green-100 text-green-700";
@@ -1453,7 +1455,7 @@ export function Patients() {
                   },
                 },
                 {
-                  header: "Actions",
+                  header: t('actions'),
                   accessor: (r) => (
                     <div className="flex items-center gap-2">
                       <button
@@ -1496,7 +1498,7 @@ export function Patients() {
           setIsModalOpen(false);
           setSelectedPatient(null);
         }}
-        title={selectedPatient ? "Edit Patient" : "Register New Patient"}
+        title={selectedPatient ? t('editPatient') : t('registerNewPatient')}
       >
         <PatientRegistrationForm
           patient={selectedPatient ? normalizePatientKeys(selectedPatient) : null}
@@ -1511,31 +1513,31 @@ export function Patients() {
           setViewModalOpen(false);
           setSelectedPatient(null);
         }}
-        title="Patient Details"
+        title={t('patientDetails')}
       >
         {selectedPatient && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-800">
-            <p><strong>UPID:</strong> {selectedPatient.upid}</p>
-            <p><strong>Name:</strong> {selectedPatient.firstName} {selectedPatient.lastName}</p>
-            <p><strong>Father’s Name:</strong> {selectedPatient.fatherName}</p>
-            <p><strong>DOB:</strong> {selectedPatient.dateOfBirth}</p>
-            <p><strong>Age:</strong> {calculateAge(selectedPatient.dateOfBirth)}</p>
-            <p><strong>Gender:</strong> {selectedPatient.gender}</p>
-            <p><strong>Phone:</strong> {selectedPatient.phone}</p>
-            <p><strong>Email:</strong> {selectedPatient.email || "—"}</p>
-            <p><strong>Address:</strong> {selectedPatient.address || "—"}</p>
-            <p><strong>Blood Group:</strong> {selectedPatient.bloodGroup}</p>
-            <p><strong>Height:</strong> {selectedPatient.height} cm</p>
-            <p><strong>Weight:</strong> {selectedPatient.weight} kg</p>
-            <p><strong>Treatment:</strong> {selectedPatient.currentTreatment}</p>
-            <p><strong>Allergies:</strong> {selectedPatient.allergies}</p>
-            <p><strong>History:</strong> {selectedPatient.medicalHistory}</p>
-            <p><strong>National ID:</strong> {selectedPatient.nationalId}</p>
-            <p><strong>Insurance:</strong> {selectedPatient.insuranceProvider}</p>
-            <p><strong>Policy No:</strong> {selectedPatient.policyNumber}</p>
-            <p><strong>Emergency Contact:</strong> {selectedPatient.emergencyName}</p>
-            <p><strong>Emergency Phone:</strong> {selectedPatient.emergencyPhone}</p>
-            <p><strong>Status:</strong> {selectedPatient.status}</p>
+            <p><strong>{t('upid')}:</strong> {selectedPatient.upid}</p>
+            <p><strong>{t('name')}:</strong> {selectedPatient.firstName} {selectedPatient.lastName}</p>
+            <p><strong>{t('fatherName')}:</strong> {selectedPatient.fatherName}</p>
+            <p><strong>{t('dob')}:</strong> {selectedPatient.dateOfBirth}</p>
+            <p><strong>{t('age')}:</strong> {calculateAge(selectedPatient.dateOfBirth)}</p>
+            <p><strong>{t('gender')}:</strong> {selectedPatient.gender}</p>
+            <p><strong>{t('phone')}:</strong> {selectedPatient.phone}</p>
+            <p><strong>{t('email')}:</strong> {selectedPatient.email || "—"}</p>
+            <p><strong>{t('address')}:</strong> {selectedPatient.address || "—"}</p>
+            <p><strong>{t('bloodGroup')}:</strong> {selectedPatient.bloodGroup}</p>
+            <p><strong>{t('height')}:</strong> {selectedPatient.height} cm</p>
+            <p><strong>{t('weight')}:</strong> {selectedPatient.weight} kg</p>
+            <p><strong>{t('currentTreatment')}:</strong> {selectedPatient.currentTreatment}</p>
+            <p><strong>{t('allergies')}:</strong> {selectedPatient.allergies}</p>
+            <p><strong>{t('history')}:</strong> {selectedPatient.medicalHistory}</p>
+            <p><strong>{t('nationalId')}:</strong> {selectedPatient.nationalId}</p>
+            <p><strong>{t('insurance')}:</strong> {selectedPatient.insuranceProvider}</p>
+            <p><strong>{t('policyNo')}:</strong> {selectedPatient.policyNumber}</p>
+            <p><strong>{t('emergencyContact')}:</strong> {selectedPatient.emergencyName}</p>
+            <p><strong>{t('emergencyPhone')}:</strong> {selectedPatient.emergencyPhone}</p>
+            <p><strong>{t('status')}:</strong> {selectedPatient.status}</p>
           </div>
         )}
       </Modal>

@@ -7,6 +7,8 @@ import commonEn from './locales/en/common.json';
 import commonAr from './locales/ar/common.json';
 import navigationEn from './locales/en/navigation.json';
 import navigationAr from './locales/ar/navigation.json';
+import loginEn from './locales/en/login.json';
+import loginAr from './locales/ar/login.json';
 import formsEn from './locales/en/forms.json';
 import formsAr from './locales/ar/forms.json';
 import dashboardEn from './locales/en/dashboard.json';
@@ -31,11 +33,20 @@ import reportsEn from './locales/en/reports.json';
 import reportsAr from './locales/ar/reports.json';
 import settingsEn from './locales/en/settings.json';
 import settingsAr from './locales/ar/settings.json';
+import prescriptionsEn from './locales/en/prescriptions.json';
+import prescriptionsAr from './locales/ar/prescriptions.json';
+import userManagementEn from './locales/en/userManagement.json';
+import userManagementAr from './locales/ar/userManagement.json';
+import attendanceEn from './locales/en/attendance.json';
+import attendanceAr from './locales/ar/attendance.json';
+import helpEn from './locales/en/help.json';
+import helpAr from './locales/ar/help.json';
 
 const resources = {
   en: {
     common: commonEn,
     navigation: navigationEn,
+    login: loginEn,
     forms: formsEn,
     dashboard: dashboardEn,
     patients: patientsEn,
@@ -48,10 +59,15 @@ const resources = {
     billing: billingEn,
     reports: reportsEn,
     settings: settingsEn,
+    prescriptions: prescriptionsEn,
+    userManagement: userManagementEn,
+    attendance: attendanceEn,
+    help: helpEn,
   },
   ar: {
     common: commonAr,
     navigation: navigationAr,
+    login: loginAr,
     forms: formsAr,
     dashboard: dashboardAr,
     patients: patientsAr,
@@ -64,6 +80,10 @@ const resources = {
     billing: billingAr,
     reports: reportsAr,
     settings: settingsAr,
+    prescriptions: prescriptionsAr,
+    userManagement: userManagementAr,
+    attendance: attendanceAr,
+    help: helpAr,
   },
 };
 

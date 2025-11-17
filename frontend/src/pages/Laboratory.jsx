@@ -221,8 +221,10 @@ import { FlaskConical, Search, Plus, FileCheck, Trash2, Edit2 } from "../lib/ico
 import { Button } from "../components/common/Button";
 import { DataTable } from "../components/common/DataTable";
 import { Modal } from "../components/common/Modal";
+import { useTranslation } from 'react-i18next';
 
 export function Laboratory() {
+  const { t } = useTranslation('laboratory');
   const [searchQuery, setSearchQuery] = useState("");
   const [labTests, setLabTests] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -305,7 +307,7 @@ export function Laboratory() {
 
   // ✅ Delete lab order
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this lab order?")) return;
+    if (!window.confirm(t('deleteConfirm'))) return;
     try {
       await fetch(`${API_URL}/${id}`, { method: "DELETE" });
       await fetchLabOrders();
@@ -327,13 +329,13 @@ export function Laboratory() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-10">
         <div>
           <h1 className="text-2xl md:text-3xl font-display font-bold text-gray-900">
-            Laboratory
+            {t('title')}
           </h1>
-          <p className="text-gray-600 mt-1">Manage lab tests and results</p>
+          <p className="text-gray-600 mt-1">{t('subtitle')}</p>
         </div>
         <div className="w-full sm:w-auto">
           <Button icon={Plus} onClick={() => setIsModalOpen(true)} className="w-full sm:w-auto">
-            Create Lab Order
+            {t('createLabOrder')}
           </Button>
         </div>
       </div>
@@ -345,7 +347,7 @@ export function Laboratory() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Search lab tests..."
+              placeholder={t('searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
@@ -356,12 +358,12 @@ export function Laboratory() {
         <DataTable
           data={filteredTests}
           columns={[
-            { header: "ID", accessor: "id" },
-            { header: "Patient", accessor: "patientName" },
-            { header: "Test Type", accessor: "testType" },
-            { header: "Ordered By", accessor: "orderedBy" },
+            { header: t('id'), accessor: "id" },
+            { header: t('patient'), accessor: "patientName" },
+            { header: t('testType'), accessor: "testType" },
+            { header: t('orderedBy'), accessor: "orderedBy" },
             {
-              header: "Status",
+              header: t('status'),
               accessor: (row) => (
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(row.status)}`}
@@ -371,20 +373,20 @@ export function Laboratory() {
               ),
             },
             {
-              header: "Actions",
+              header: t('actions'),
               accessor: (row) => (
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleEdit(row)}
                     className="text-blue-600 hover:text-blue-800"
-                    title="Edit"
+                    title={t('edit')}
                   >
                     <Edit2 className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDelete(row.id)}
                     className="text-red-600 hover:text-red-800"
-                    title="Delete"
+                    title={t('delete')}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -402,12 +404,12 @@ export function Laboratory() {
           setIsModalOpen(false);
           setEditId(null);
         }}
-        title={editId ? "Edit Lab Order" : "Create Lab Order"}
+        title={editId ? t('editLabOrder') : t('createLabOrder')}
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
-            placeholder="Patient Name"
+            placeholder={t('patientNamePlaceholder')}
             value={formData.patientName}
             onChange={(e) => setFormData({ ...formData, patientName: e.target.value })}
             className="w-full border rounded-lg p-2"
@@ -415,7 +417,7 @@ export function Laboratory() {
           />
           <input
             type="text"
-            placeholder="Test Type"
+            placeholder={t('testTypePlaceholder')}
             value={formData.testType}
             onChange={(e) => setFormData({ ...formData, testType: e.target.value })}
             className="w-full border rounded-lg p-2"
@@ -423,7 +425,7 @@ export function Laboratory() {
           />
           <input
             type="text"
-            placeholder="Ordered By"
+            placeholder={t('orderedByPlaceholder')}
             value={formData.orderedBy}
             onChange={(e) => setFormData({ ...formData, orderedBy: e.target.value })}
             className="w-full border rounded-lg p-2"
@@ -434,12 +436,12 @@ export function Laboratory() {
             onChange={(e) => setFormData({ ...formData, status: e.target.value })}
             className="w-full border rounded-lg p-2"
           >
-            <option value="PENDING">Pending</option>
-            <option value="IN_PROGRESS">In Progress</option>
-            <option value="COMPLETED">Completed</option>
+            <option value="PENDING">{t('pending')}</option>
+            <option value="IN_PROGRESS">{t('inProgress')}</option>
+            <option value="COMPLETED">{t('completed')}</option>
           </select>
           <Button type="submit" variant="primary" className="w-full">
-            {editId ? "Update" : "Save"}
+            {editId ? t('update') : t('save')}
           </Button>
         </form>
       </Modal>

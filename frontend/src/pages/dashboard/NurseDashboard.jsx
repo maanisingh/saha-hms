@@ -578,8 +578,10 @@ import { Modal } from "../../components/common/Modal";
 import { patientsApi } from "../../services/api/patients";
 import { appointmentsApi } from "../../services/api/appointments";
 import { prescriptionsApi } from "../../services/api/prescriptions";
+import { useTranslation } from 'react-i18next';
 
 export function NurseDashboard() {
+  const { t } = useTranslation('nurseDashboard');
   const [patients, setPatients] = useState([]);
   const [appointments, setAppointments] = useState([]);
   const [prescriptions, setPrescriptions] = useState([]);
@@ -702,10 +704,10 @@ export function NurseDashboard() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mt-10">
         <div>
           <h1 className="text-2xl sm:text-3xl font-display font-bold text-gray-900">
-            Nurse Station
+            {t('title')}
           </h1>
           <p className="text-gray-600 mt-1 text-sm sm:text-base">
-            Patient care and monitoring
+            {t('subtitle')}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -714,20 +716,20 @@ export function NurseDashboard() {
             icon={Thermometer}
             onClick={handleViewPatients}
           >
-            Record Vitals
+            {t('recordVitals')}
           </Button>
           <Button variant="primary" icon={Pill} onClick={handleViewMedications}>
-            Medications
+            {t('medications')}
           </Button>
         </div>
       </div>
 
       {/* Stats Section */}
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <StatsCard title="IPD Patients" value={ipdPatients.length.toString()} icon={Users} color="blue" />
-        <StatsCard title="Medications Due" value={pendingMeds.toString()} icon={Pill} color="yellow" />
-        <StatsCard title="OPD Patients" value={opdPatients.length.toString()} icon={Activity} color="green" />
-        <StatsCard title="Critical Alerts" value={criticalPatients.toString()} icon={AlertCircle} color="red" />
+        <StatsCard title={t('ipdPatients')} value={ipdPatients.length.toString()} icon={Users} color="blue" />
+        <StatsCard title={t('medicationsDue')} value={pendingMeds.toString()} icon={Pill} color="yellow" />
+        <StatsCard title={t('opdPatients')} value={opdPatients.length.toString()} icon={Activity} color="green" />
+        <StatsCard title={t('criticalAlerts')} value={criticalPatients.toString()} icon={AlertCircle} color="red" />
       </div>
 
       {/* Main Content */}
@@ -736,7 +738,7 @@ export function NurseDashboard() {
         <div className="lg:col-span-2">
           <div className="bg-white/60 backdrop-blur-md rounded-xl shadow-soft p-4 sm:p-6 border border-gray-100 overflow-x-auto">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">
-              IPD Patients
+              {t('ipdPatients')}
             </h2>
             {loading ? (
               <div className="text-center py-8">
@@ -747,14 +749,14 @@ export function NurseDashboard() {
                 <DataTable
                   data={ipdPatients}
                   columns={[
-                    { header: "UPID", accessor: "upid" },
+                    { header: t('upid'), accessor: "upid" },
                     {
-                      header: "Name",
+                      header: t('name'),
                       accessor: (row) => `${row.first_name} ${row.last_name}`,
                     },
-                    { header: "Phone", accessor: "phone" },
+                    { header: t('phone'), accessor: "phone" },
                     {
-                      header: "Status",
+                      header: t('status'),
                       accessor: (row) => (
                         <span
                           className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(row.status)}`}
@@ -764,13 +766,13 @@ export function NurseDashboard() {
                       ),
                     },
                     {
-                      header: "Actions",
+                      header: t('actions'),
                       accessor: (row) => (
                         <button
                           onClick={() => handleRecordVitals(row)}
                           className="px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                         >
-                          Record Vitals
+                          {t('recordVitals')}
                         </button>
                       ),
                     },
@@ -785,34 +787,34 @@ export function NurseDashboard() {
         <div className="space-y-6">
           {/* Quick Actions */}
           <div className="bg-white/60 backdrop-blur-md rounded-xl shadow-soft p-4 sm:p-6 border border-gray-100">
-            <h3 className="font-bold text-gray-900 mb-4">Quick Actions</h3>
+            <h3 className="font-bold text-gray-900 mb-4">{t('quickActions')}</h3>
             <div className="space-y-2">
               <Button variant="outline" className="w-full justify-start" onClick={handleViewPatients}>
-                <Users className="w-4 h-4 mr-2" /> View All Patients
+                <Users className="w-4 h-4 mr-2" /> {t('viewAllPatients')}
               </Button>
               <Button variant="outline" className="w-full justify-start" onClick={handleViewAppointments}>
-                <Calendar className="w-4 h-4 mr-2" /> Today's Appointments
+                <Calendar className="w-4 h-4 mr-2" /> {t('todaysAppointments')}
               </Button>
               <Button variant="outline" className="w-full justify-start" onClick={handleViewMedications}>
-                <Pill className="w-4 h-4 mr-2" /> Medication Schedule
+                <Pill className="w-4 h-4 mr-2" /> {t('medicationSchedule')}
               </Button>
             </div>
           </div>
 
           {/* Summary */}
           <div className="bg-white/60 backdrop-blur-md rounded-xl shadow-soft p-4 sm:p-6 border border-gray-100">
-            <h3 className="font-bold text-gray-900 mb-4">Today's Summary</h3>
+            <h3 className="font-bold text-gray-900 mb-4">{t('todaysSummary')}</h3>
             <div className="space-y-3 text-sm sm:text-base">
               <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                <span className="font-medium">IPD Patients</span>
+                <span className="font-medium">{t('ipdPatients')}</span>
                 <span className="font-bold text-blue-600">{ipdPatients.length}</span>
               </div>
               <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
-                <span className="font-medium">Meds Pending</span>
+                <span className="font-medium">{t('medsPending')}</span>
                 <span className="font-bold text-yellow-600">{pendingMeds}</span>
               </div>
               <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
-                <span className="font-medium">Critical</span>
+                <span className="font-medium">{t('critical')}</span>
                 <span className="font-bold text-red-600">{criticalPatients}</span>
               </div>
             </div>

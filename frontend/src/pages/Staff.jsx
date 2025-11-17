@@ -387,8 +387,10 @@ import axios from "axios";
 import { Search, Plus, Edit2, Eye, Trash2 } from "../lib/icons";
 import { Button } from "../components/common/Button";
 import { DataTable } from "../components/common/DataTable";
+import { useTranslation } from 'react-i18next';
 
 export function Staff() {
+  const { t } = useTranslation('staff');
   const [searchQuery, setSearchQuery] = useState("");
   const [staffMembers, setStaffMembers] = useState([]);
   const [departments, setDepartments] = useState([]); // ✅ new
@@ -450,12 +452,12 @@ export function Staff() {
         ...formData,
         departmentId: Number(formData.departmentId), // ✅ ensure numeric
       });
-      alert("✅ Employee added successfully!");
+      alert(`✅ ${t('employeeAddedSuccess')}`);
       setIsModalOpen(false);
       fetchStaff();
     } catch (err) {
       console.error("❌ Error adding staff:", err);
-      alert("Failed to add staff.");
+      alert(t('failedToAddStaff'));
     }
   };
 
@@ -476,21 +478,21 @@ export function Staff() {
           dateOfBirth: formData.dateOfBirth,
         },
       });
-      alert("✅ Employee updated successfully!");
+      alert(`✅ ${t('employeeUpdatedSuccess')}`);
       setIsModalOpen(false);
       fetchStaff();
     } catch (err) {
       console.error("❌ Error updating staff:", err);
-      alert("Failed to update staff.");
+      alert(t('failedToUpdateStaff'));
     }
   };
 
   // ✅ Delete (soft delete)
   const handleDeleteStaff = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this staff?")) return;
+    if (!window.confirm(t('deleteConfirm'))) return;
     try {
       await axios.delete(`${API_URL}/${id}`);
-      alert("🗑️ Employee deleted successfully!");
+      alert(`🗑️ ${t('employeeDeletedSuccess')}`);
       fetchStaff();
     } catch (err) {
       console.error("❌ Error deleting staff:", err);
@@ -558,14 +560,14 @@ export function Staff() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-10">
         <div>
           <h1 className="text-3xl font-display font-bold text-gray-900">
-            Staff Management
+            {t('title')}
           </h1>
           <p className="text-gray-600 text-sm sm:text-base">
-            Manage all hospital employees and staff members
+            {t('subtitle')}
           </p>
         </div>
         <Button icon={Plus} onClick={openAddModal} className="w-full sm:w-auto">
-          Add Employee
+          {t('addEmployee')}
         </Button>
       </div>
 
@@ -576,7 +578,7 @@ export function Staff() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Search by name, code, or department..."
+              placeholder={t('searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
@@ -588,18 +590,18 @@ export function Staff() {
         <DataTable
           data={filteredStaff}
           columns={[
-            { header: "Code", accessor: "employeeCode" },
+            { header: t('code'), accessor: "employeeCode" },
             {
-              header: "Name",
+              header: t('name'),
               accessor: (r) =>
                 `${r.user?.firstName || ""} ${r.user?.lastName || ""}`,
             },
-            { header: "Role", accessor: "role" },
-            { header: "Department", accessor: (r) => r.department?.name || "—" },
-            { header: "Phone", accessor: (r) => r.user?.phone || "—" },
-            { header: "Email", accessor: (r) => r.user?.email || "—" },
+            { header: t('role'), accessor: "role" },
+            { header: t('department'), accessor: (r) => r.department?.name || "—" },
+            { header: t('phone'), accessor: (r) => r.user?.phone || "—" },
+            { header: t('email'), accessor: (r) => r.user?.email || "—" },
             {
-              header: "Status",
+              header: t('status'),
               accessor: (r) => (
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-medium ${
@@ -608,12 +610,12 @@ export function Staff() {
                       : "bg-gray-100 text-gray-700"
                   }`}
                 >
-                  {r.isActive ? "Active" : "Inactive"}
+                  {r.isActive ? t('active') : t('inactive')}
                 </span>
               ),
             },
             {
-              header: "Actions",
+              header: t('actions'),
               accessor: (row) => (
                 <div className="flex items-center gap-2">
                   <button
@@ -647,7 +649,7 @@ export function Staff() {
             </button>
 
             <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
-              {modalMode === "add" ? "Add New Employee" : "Edit Employee"}
+              {modalMode === "add" ? t('addNewEmployee') : t('editEmployee')}
             </h2>
 
             <form
@@ -656,36 +658,36 @@ export function Staff() {
             >
               {/* Inputs */}
               {[
-                "firstName",
-                "lastName",
-                "email",
-                "password",
-                "phone",
-                "dateOfBirth",
-                "address",
-                "specialization",
-                "qualification",
-                "experience",
-                "joinDate",
-              ].map((field, idx) => (
+                { key: "firstName", label: t('firstName') },
+                { key: "lastName", label: t('lastName') },
+                { key: "email", label: t('email') },
+                { key: "password", label: t('password') },
+                { key: "phone", label: t('phone') },
+                { key: "dateOfBirth", label: t('dateOfBirth') },
+                { key: "address", label: t('address') },
+                { key: "specialization", label: t('specialization') },
+                { key: "qualification", label: t('qualification') },
+                { key: "experience", label: t('experience') },
+                { key: "joinDate", label: t('joinDate') },
+              ].map(({ key, label }, idx) => (
                 <div key={idx}>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
-                    {field.replace(/([A-Z])/g, " $1")}
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {label}
                   </label>
                   <input
                     type={
-                      field === "password"
+                      key === "password"
                         ? "password"
-                        : field.includes("date")
+                        : key.includes("date")
                         ? "date"
                         : "text"
                     }
-                    value={formData[field] || ""}
+                    value={formData[key] || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, [field]: e.target.value })
+                      setFormData({ ...formData, [key]: e.target.value })
                     }
                     className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                    required={["firstName", "email"].includes(field)}
+                    required={["firstName", "email"].includes(key)}
                   />
                 </div>
               ))}
@@ -693,7 +695,7 @@ export function Staff() {
               {/* Role */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Role
+                  {t('role')}
                 </label>
                 <select
                   value={formData.role}
@@ -702,19 +704,19 @@ export function Staff() {
                   }
                   className="w-full border rounded-lg p-2"
                 >
-                  <option value="DOCTOR">Doctor</option>
-                  <option value="NURSE">Nurse</option>
-                  <option value="PHARMACIST">Pharmacist</option>
-                  <option value="LAB_TECH">Lab Technician</option>
-                  <option value="RECEPTIONIST">Receptionist</option>
-                  <option value="ADMIN">Admin</option>
+                  <option value="DOCTOR">{t('doctor')}</option>
+                  <option value="NURSE">{t('nurse')}</option>
+                  <option value="PHARMACIST">{t('pharmacist')}</option>
+                  <option value="LAB_TECH">{t('labTech')}</option>
+                  <option value="RECEPTIONIST">{t('receptionist')}</option>
+                  <option value="ADMIN">{t('admin')}</option>
                 </select>
               </div>
 
               {/* ✅ Department Dropdown (Dynamic) */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Department
+                  {t('department')}
                 </label>
                 <select
                   value={formData.departmentId}
@@ -726,7 +728,7 @@ export function Staff() {
                   }
                   className="w-full border rounded-lg p-2"
                 >
-                  <option value="">Select Department</option>
+                  <option value="">{t('selectDepartment')}</option>
                   {departments.map((dept) => (
                     <option key={dept.id} value={dept.id}>
                       {dept.name}
@@ -738,7 +740,7 @@ export function Staff() {
               {/* Gender */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Gender
+                  {t('gender')}
                 </label>
                 <select
                   value={formData.gender}
@@ -747,9 +749,9 @@ export function Staff() {
                   }
                   className="w-full border rounded-lg p-2"
                 >
-                  <option value="MALE">Male</option>
-                  <option value="FEMALE">Female</option>
-                  <option value="OTHER">Other</option>
+                  <option value="MALE">{t('male')}</option>
+                  <option value="FEMALE">{t('female')}</option>
+                  <option value="OTHER">{t('other')}</option>
                 </select>
               </div>
 
@@ -763,12 +765,12 @@ export function Staff() {
                   }
                   className="w-4 h-4 accent-blue-600"
                 />
-                <label className="text-sm text-gray-700">Active</label>
+                <label className="text-sm text-gray-700">{t('active')}</label>
               </div>
 
               <div className="sm:col-span-2 mt-4">
                 <Button type="submit" className="w-full">
-                  {modalMode === "add" ? "Add Employee" : "Save Changes"}
+                  {modalMode === "add" ? t('addEmployee') : t('saveChanges')}
                 </Button>
               </div>
             </form>

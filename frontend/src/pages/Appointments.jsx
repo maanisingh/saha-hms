@@ -845,8 +845,10 @@ import { Button } from "../components/common/Button";
 import { DataTable } from "../components/common/DataTable";
 import { Modal } from "../components/common/Modal";
 import { AppointmentBookingForm } from "../components/forms/AppointmentBookingForm";
+import { useTranslation } from 'react-i18next';
 
 export default function Appointments() {
+  const { t } = useTranslation('appointments');
   const [appointments, setAppointments] = useState([]);
   const [patients, setPatients] = useState([]);
   const [doctors, setDoctors] = useState([]);
@@ -901,11 +903,11 @@ export default function Appointments() {
       const res = await axios.post("http://localhost:5000/api/appointments", formData);
       setAppointments((prev) => [...prev, res.data.data]);
       setIsModalOpen(false);
-      alert("✅ Appointment booked successfully!");
+      alert(`✅ ${t('bookedSuccess')}`);
       fetchAllData();
     } catch (error) {
       console.error("❌ Error creating appointment:", error.response?.data || error);
-      alert("❌ Failed to create appointment.");
+      alert(`❌ ${t('bookingFailed')}`);
     }
   };
 
@@ -921,24 +923,24 @@ export default function Appointments() {
       );
       setIsEditModalOpen(false);
       setEditAppointment(null);
-      alert("✅ Appointment updated successfully!");
+      alert(`✅ ${t('updatedSuccess')}`);
       fetchAllData();
     } catch (error) {
       console.error("❌ Error updating appointment:", error.response?.data || error);
-      alert("❌ Failed to update appointment.");
+      alert(`❌ ${t('updateFailed')}`);
     }
   };
 
   // ✅ Cancel Appointment
   const handleCancel = async (id) => {
-    if (!window.confirm("Are you sure you want to cancel this appointment?")) return;
+    if (!window.confirm(t('cancelConfirm'))) return;
     try {
       await axios.delete(`http://localhost:5000/api/appointments/${id}`);
       setAppointments((prev) => prev.filter((a) => a.id !== id));
-      alert("🗑️ Appointment cancelled successfully!");
+      alert(`🗑️ ${t('cancelledSuccess')}`);
     } catch (error) {
       console.error("❌ Error cancelling appointment:", error.response?.data || error);
-      alert("❌ Failed to cancel appointment.");
+      alert(`❌ ${t('cancelFailed')}`);
     }
   };
 
@@ -976,26 +978,26 @@ export default function Appointments() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mt-10">
         <div>
-          <h1 className="text-3xl font-display font-bold text-gray-900">Appointments</h1>
-          <p className="text-gray-600 mt-1">Manage and schedule patient appointments</p>
+          <h1 className="text-3xl font-display font-bold text-gray-900">{t('title')}</h1>
+          <p className="text-gray-600 mt-1">{t('subtitle')}</p>
         </div>
         <Button onClick={() => setIsModalOpen(true)} icon={Plus}>
-          Book Appointment
+          {t('bookAppointment')}
         </Button>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: "Total", value: appointments.length, icon: Calendar, colorClass: "bg-blue-100 text-blue-600" },
-          { label: "Waiting", value: appointments.filter(a => a.status === "WAITING").length, icon: Clock, colorClass: "bg-yellow-100 text-yellow-600" },
-          { label: "In Consultation", value: appointments.filter(a => a.status === "IN_CONSULTATION").length, icon: User, colorClass: "bg-purple-100 text-purple-600" },
-          { label: "Completed", value: appointments.filter(a => a.status === "COMPLETED").length, icon: CheckCircle, colorClass: "bg-green-100 text-green-600" }
+          { labelKey: "total", value: appointments.length, icon: Calendar, colorClass: "bg-blue-100 text-blue-600" },
+          { labelKey: "waiting", value: appointments.filter(a => a.status === "WAITING").length, icon: Clock, colorClass: "bg-yellow-100 text-yellow-600" },
+          { labelKey: "inConsultation", value: appointments.filter(a => a.status === "IN_CONSULTATION").length, icon: User, colorClass: "bg-purple-100 text-purple-600" },
+          { labelKey: "completed", value: appointments.filter(a => a.status === "COMPLETED").length, icon: CheckCircle, colorClass: "bg-green-100 text-green-600" }
         ].map((stat, i) => (
           <div key={i} className="bg-white rounded-xl shadow p-5 border border-gray-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">{stat.label}</p>
+                <p className="text-sm text-gray-600">{t(stat.labelKey)}</p>
                 <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
               </div>
               <div className={`p-3 rounded-lg ${stat.colorClass}`}>
@@ -1009,8 +1011,14 @@ export default function Appointments() {
       {/* Appointment Table */}
       <div className="bg-white rounded-xl shadow p-6 border border-gray-100">
         <div className="flex flex-wrap gap-2 mb-6">
-          {["ALL", "SCHEDULED", "WAITING", "IN_CONSULTATION", "COMPLETED", "CANCELLED"].map(
-            (status) => (
+          {[
+            { status: "ALL", labelKey: "all" },
+            { status: "SCHEDULED", labelKey: "scheduled" },
+            { status: "WAITING", labelKey: "waiting_status" },
+            { status: "IN_CONSULTATION", labelKey: "in_consultation" },
+            { status: "COMPLETED", labelKey: "completed_status" },
+            { status: "CANCELLED", labelKey: "cancelled" }
+          ].map(({ status, labelKey }) => (
               <button
                 key={status}
                 onClick={() => setFilterStatus(status)}
@@ -1020,7 +1028,7 @@ export default function Appointments() {
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                {status.replace("_", " ")}
+                {t(labelKey)}
               </button>
             )
           )}
@@ -1032,14 +1040,14 @@ export default function Appointments() {
               (a) => filterStatus === "ALL" || a.status === filterStatus
             )}
             columns={[
-              { header: "Appointment Number", accessor: "appointmentNumber" },
-              { header: "Patient", accessor: (row) => getPatientName(row.patientId) },
-              { header: "Doctor", accessor: (row) => getDoctorName(row.doctorId) },
+              { header: t('appointmentNumber'), accessor: "appointmentNumber" },
+              { header: t('patient'), accessor: (row) => getPatientName(row.patientId) },
+              { header: t('doctor'), accessor: (row) => getDoctorName(row.doctorId) },
               // ✅ CHANGED: Department Name instead of ID
-              { header: "Department", accessor: (row) => getDepartmentName(row.departmentId) },
-              { header: "Scheduled At", accessor: "scheduledAt" },
+              { header: t('department'), accessor: (row) => getDepartmentName(row.departmentId) },
+              { header: t('scheduledAt'), accessor: "scheduledAt" },
               {
-                header: "Status",
+                header: t('status'),
                 accessor: (row) => (
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
@@ -1051,13 +1059,13 @@ export default function Appointments() {
                 ),
               },
               {
-                header: "Actions",
+                header: t('actions'),
                 accessor: (row) => (
                   <div className="flex gap-3 items-center justify-center">
                     <button
                       onClick={() => handleView(row)}
                       className="text-indigo-600 hover:text-indigo-800"
-                      title="View"
+                      title={t('view')}
                     >
                       <Eye className="w-4 h-4" />
                     </button>
@@ -1065,7 +1073,7 @@ export default function Appointments() {
                     <button
                       onClick={() => handleEdit(row)}
                       className="text-green-600 hover:text-green-800"
-                      title="Edit"
+                      title={t('edit')}
                     >
                       <Edit2 className="w-4 h-4" />
                     </button>
@@ -1074,7 +1082,7 @@ export default function Appointments() {
                         <button
                           onClick={() => handleCancel(row.id)}
                           className="text-red-600 hover:text-red-800"
-                          title="Cancel"
+                          title={t('cancel')}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -1091,7 +1099,7 @@ export default function Appointments() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Book New Appointment"
+        title={t('bookNewAppointment')}
       >
         <AppointmentBookingForm onSuccess={handleBookingSuccess} />
       </Modal>
@@ -1100,7 +1108,7 @@ export default function Appointments() {
         <Modal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
-          title="Edit Appointment"
+          title={t('editAppointment')}
         >
           <AppointmentBookingForm
             onSuccess={handleEditSuccess}
@@ -1114,22 +1122,22 @@ export default function Appointments() {
         <Modal
           isOpen={!!selectedAppointment}
           onClose={() => setSelectedAppointment(null)}
-          title="Appointment Details"
+          title={t('appointmentDetails')}
         >
           <div className="space-y-3 text-sm md:text-base">
-            <p><strong>ID:</strong> {selectedAppointment.id}</p>
-            <p><strong>Appointment Number:</strong> {selectedAppointment.appointmentNumber}</p>
-            
-            <p><strong>Patient:</strong> {getPatientName(selectedAppointment.patientId)}</p>
-            <p><strong>Doctor:</strong> {getDoctorName(selectedAppointment.doctorId)}</p>
+            <p><strong>{t('id')}:</strong> {selectedAppointment.id}</p>
+            <p><strong>{t('appointmentNumber')}:</strong> {selectedAppointment.appointmentNumber}</p>
+
+            <p><strong>{t('patient')}:</strong> {getPatientName(selectedAppointment.patientId)}</p>
+            <p><strong>{t('doctor')}:</strong> {getDoctorName(selectedAppointment.doctorId)}</p>
             {/* ✅ CHANGED: show department name instead of ID */}
-            <p><strong>Department:</strong> {getDepartmentName(selectedAppointment.departmentId)}</p>
-            <p><strong>Duration (minutes):</strong> {getDepartmentName(selectedAppointment.durationMins)}</p>
-            <p><strong>Scheduled At:</strong> {selectedAppointment.scheduledAt}</p>
-            <p><strong>Status:</strong> {selectedAppointment.status}</p>
-            <p><strong>Reason:</strong> {selectedAppointment.reason}</p>
-            <p><strong>Notes:</strong> {selectedAppointment.notes}</p>
-            
+            <p><strong>{t('department')}:</strong> {getDepartmentName(selectedAppointment.departmentId)}</p>
+            <p><strong>{t('durationMins')}:</strong> {getDepartmentName(selectedAppointment.durationMins)}</p>
+            <p><strong>{t('scheduledAt')}:</strong> {selectedAppointment.scheduledAt}</p>
+            <p><strong>{t('status')}:</strong> {selectedAppointment.status}</p>
+            <p><strong>{t('reason')}:</strong> {selectedAppointment.reason}</p>
+            <p><strong>{t('notes')}:</strong> {selectedAppointment.notes}</p>
+
           </div>
         </Modal>
       )}

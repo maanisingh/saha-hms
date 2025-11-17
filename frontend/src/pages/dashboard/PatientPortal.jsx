@@ -49,7 +49,7 @@
 //       <div className="flex items-center justify-between">
 //         <div>
 //           <h1 className="text-3xl font-display font-bold text-gray-900">
-//             Patient Portal
+//             {t('title')}
 //           </h1>
 //           <p className="text-gray-600 mt-1">Welcome back, John Doe</p>
 //         </div>
@@ -277,8 +277,10 @@ import {
 import { StatsCard } from "../../components/common/StatsCard";
 import { Button } from "../../components/common/Button";
 import { DataTable } from "../../components/common/DataTable";
+import { useTranslation } from 'react-i18next';
 
 export function PatientPortal() {
+  const { t } = useTranslation('patientPortal');
   const upcomingAppointments = [
     {
       doctor: "Dr. Smith",
@@ -312,7 +314,7 @@ export function PatientPortal() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-10">
         <div>
           <h1 className="text-2xl sm:text-3xl font-display font-bold text-gray-900">
-            Patient Portal
+            {t('title')}
           </h1>
           <p className="text-gray-600 mt-1 text-sm sm:text-base">
             Welcome back, John Doe

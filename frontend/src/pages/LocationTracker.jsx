@@ -3,8 +3,10 @@ import axios from "axios";
 import { Users, Search } from "../lib/icons";
 import { DataTable } from "../components/common/DataTable";
 import { Button } from "../components/common/Button";
+import { useTranslation } from 'react-i18next';
 
 export function LocationTracker() {
+  const { t } = useTranslation('locationTracker');
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,7 +39,7 @@ export function LocationTracker() {
       l.beacon.zoneName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  if (loading) return <p className="text-center py-8 text-gray-500">Loading staff locations...</p>;
+  if (loading) return <p className="text-center py-8 text-gray-500">{t('loading')}</p>;
 
   // Stats
   const totalStaff = locations.length;
@@ -47,10 +49,10 @@ export function LocationTracker() {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3 mt-10">
         <div>
-          <h1 className="text-3xl font-display font-bold text-gray-900">Location Tracker</h1>
-          <p className="text-gray-600 mt-1">View staff locations and floors in real-time</p>
+          <h1 className="text-3xl font-display font-bold text-gray-900">{t('title')}</h1>
+          <p className="text-gray-600 mt-1">{t('subtitle')}</p>
         </div>
-        <Button onClick={fetchLocations}>Refresh Locations</Button>
+        <Button onClick={fetchLocations}>{t('refresh')}</Button>
       </div>
 
       {/* Stats */}
@@ -58,7 +60,7 @@ export function LocationTracker() {
         <div className="bg-white/60 backdrop-blur-md rounded-xl shadow-soft p-5 border border-gray-100">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Total Staff</p>
+              <p className="text-sm text-gray-600">{t('totalStaff')}</p>
               <p className="text-2xl font-bold text-gray-900 mt-1">{totalStaff}</p>
             </div>
             <div className="p-3 bg-blue-100 rounded-lg">
@@ -75,7 +77,7 @@ export function LocationTracker() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Search by staff name, role, floor, building..."
+              placeholder={t('searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -84,18 +86,18 @@ export function LocationTracker() {
         </div>
 
         {filteredLocations.length === 0 ? (
-          <p className="text-gray-500 text-center py-8">No staff location records found.</p>
+          <p className="text-gray-500 text-center py-8">{t('noRecords')}</p>
         ) : (
           <div className="overflow-x-auto">
             <DataTable
               data={filteredLocations}
               columns={[
-                { header: "Staff Name", accessor: (r) => `${r.user.firstName} ${r.user.lastName}` },
-                { header: "Role", accessor: (r) => r.user.role },
-                { header: "Building", accessor: (r) => r.beacon.building || "-" },
-                { header: "Floor", accessor: (r) => r.beacon.floor || "-" },
-                { header: "Zone", accessor: (r) => r.beacon.zoneName || "-" },
-                { header: "Last Seen", accessor: (r) => new Date(r.lastSeen).toLocaleString() },
+                { header: t('staffName'), accessor: (r) => `${r.user.firstName} ${r.user.lastName}` },
+                { header: t('role'), accessor: (r) => r.user.role },
+                { header: t('building'), accessor: (r) => r.beacon.building || "-" },
+                { header: t('floor'), accessor: (r) => r.beacon.floor || "-" },
+                { header: t('zone'), accessor: (r) => r.beacon.zoneName || "-" },
+                { header: t('lastSeen'), accessor: (r) => new Date(r.lastSeen).toLocaleString() },
               ]}
             />
           </div>

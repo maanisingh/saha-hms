@@ -64,8 +64,10 @@ app.use("/api/employees", employeeRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/prescriptions", prescriptionRoutes);
 app.use("/api/invoices", invoiceRoutes);
+app.use("/api/billing", invoiceRoutes); // Alias for billing
 app.use("/api/medicines", medicineRoutes);
 app.use("/api/staffattendance", staffattendaceRoutes);
+app.use("/api/attendance", staffattendaceRoutes); // Alias for attendance
 
 // New improved routes with relational data
 app.use("/api/lab-requests", labRequestRoutes);
@@ -75,6 +77,7 @@ app.use("/api/reports", reportsRoutes);
 // Legacy routes (for backward compatibility)
 app.use("/api/radiology", radiologyRoutes);
 app.use("/api/lab", labRoutes);
+app.use("/api/lab-tests", labRoutes); // Alias for lab tests
 
 // Location & Beacon Management
 app.use("/api/locationtracker", locationtrackerRoutes);

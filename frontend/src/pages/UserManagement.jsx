@@ -18,8 +18,10 @@ import { useAuth } from '../context/AuthContext';
 import CreateUserModal from '../components/users/CreateUserModal';
 import EditUserModal from '../components/users/EditUserModal';
 import ViewUserModal from '../components/users/ViewUserModal';
+import { useTranslation } from 'react-i18next';
 
 const UserManagement = () => {
+  const { t } = useTranslation('userManagement');
   const { user } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -131,16 +133,16 @@ const UserManagement = () => {
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-2">
               <Users className="w-8 h-8 text-hospital-purple" />
-              User Management
+              {t('title')}
             </h1>
-            <p className="text-gray-600 mt-1">Manage system users and their roles</p>
+            <p className="text-gray-600 mt-1">{t('subtitle')}</p>
           </div>
           <button
             onClick={handleCreateUser}
             className="flex items-center gap-2 px-4 py-2 bg-hospital-purple text-white rounded-lg hover:bg-hospital-purple/90 transition-colors"
           >
             <UserPlus className="w-5 h-5" />
-            Create New User
+            {t('createUser')}
           </button>
         </div>
       </div>
@@ -148,31 +150,31 @@ const UserManagement = () => {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
         <StatCard
-          title="Total Users"
+          title={t('totalUsers')}
           value={stats.total}
           icon={Users}
           color="bg-blue-500"
         />
         <StatCard
-          title="Active Users"
+          title={t('activeUsers')}
           value={stats.active}
           icon={CheckCircle}
           color="bg-green-500"
         />
         <StatCard
-          title="Doctors"
+          title={t('doctors')}
           value={stats.doctors}
           icon={Users}
           color="bg-purple-500"
         />
         <StatCard
-          title="Nurses"
+          title={t('nurses')}
           value={stats.nurses}
           icon={Users}
           color="bg-pink-500"
         />
         <StatCard
-          title="Admins"
+          title={t('admins')}
           value={stats.admin}
           icon={Shield}
           color="bg-orange-500"
@@ -187,7 +189,7 @@ const UserManagement = () => {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Search by name, email, or employee code..."
+              placeholder={t('searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-hospital-purple focus:border-transparent"
@@ -202,14 +204,14 @@ const UserManagement = () => {
               onChange={(e) => setRoleFilter(e.target.value)}
               className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-hospital-purple focus:border-transparent appearance-none bg-white"
             >
-              <option value="ALL">All Roles</option>
-              <option value="ADMIN">Admin</option>
-              <option value="DOCTOR">Doctor</option>
-              <option value="NURSE">Nurse</option>
-              <option value="RECEPTIONIST">Receptionist</option>
-              <option value="PHARMACIST">Pharmacist</option>
-              <option value="LAB_TECH">Lab Tech</option>
-              <option value="RADIOLOGIST">Radiologist</option>
+              <option value="ALL">{t('allRoles')}</option>
+              <option value="ADMIN">{t('admin')}</option>
+              <option value="DOCTOR">{t('doctor')}</option>
+              <option value="NURSE">{t('nurse')}</option>
+              <option value="RECEPTIONIST">{t('receptionist')}</option>
+              <option value="PHARMACIST">{t('pharmacist')}</option>
+              <option value="LAB_TECH">{t('labTech')}</option>
+              <option value="RADIOLOGIST">{t('radiologist')}</option>
             </select>
           </div>
         </div>
@@ -227,19 +229,19 @@ const UserManagement = () => {
               <thead className="bg-gray-50 border-b">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Employee
+                    {t('employee')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Role
+                    {t('role')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Department
+                    {t('department')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
+                    {t('status')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
+                    {t('actions')}
                   </th>
                 </tr>
               </thead>
@@ -247,7 +249,7 @@ const UserManagement = () => {
                 {filteredUsers.length === 0 ? (
                   <tr>
                     <td colSpan="5" className="px-6 py-8 text-center text-gray-500">
-                      No users found
+                      {t('noUsers')}
                     </td>
                   </tr>
                 ) : (
@@ -285,12 +287,12 @@ const UserManagement = () => {
                         {employee.isActive ? (
                           <span className="flex items-center gap-1 text-green-600 text-sm">
                             <CheckCircle className="w-4 h-4" />
-                            Active
+                            {t('active')}
                           </span>
                         ) : (
                           <span className="flex items-center gap-1 text-red-600 text-sm">
                             <XCircle className="w-4 h-4" />
-                            Inactive
+                            {t('inactive')}
                           </span>
                         )}
                       </td>

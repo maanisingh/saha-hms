@@ -277,8 +277,10 @@ import { Button } from "../components/common/Button";
 import { DataTable } from "../components/common/DataTable";
 import { Modal } from "../components/common/Modal"; // or your Modal path
 import { radiologyApi } from "../services/api/radiology.js";
+import { useTranslation } from 'react-i18next';
 
 export function Radiology() {
+  const { t } = useTranslation('radiology');
   const [searchQuery, setSearchQuery] = useState("");
   const [radiologyOrders, setRadiologyOrders] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -374,7 +376,7 @@ export function Radiology() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Delete this order?")) return;
+    if (!window.confirm(t('deleteConfirm'))) return;
     try {
       await radiologyApi.deleteOrder(id);
       setRadiologyOrders((prev) => prev.filter((o) => o.id !== id));
@@ -416,24 +418,24 @@ export function Radiology() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mt-10">
         <div>
           <h1 className="text-2xl sm:text-3xl font-display font-bold text-gray-900">
-            Radiology
+            {t('title')}
           </h1>
           <p className="text-gray-600 mt-1 text-sm sm:text-base">
-            Manage imaging studies and reports
+            {t('subtitle')}
           </p>
         </div>
         <Button icon={Plus} onClick={openCreate}>
-          Create Radiology Order
+          {t('createRadiologyOrder')}
         </Button>
       </div>
 
       {/* Stats - static or compute from list */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: "Total", value: radiologyOrders.length || "0", icon: Activity, color: "blue" },
-          { label: "Pending", value: radiologyOrders.filter(o => o.status==="PENDING").length || "0", icon: Activity, color: "yellow" },
-          { label: "In Progress", value: radiologyOrders.filter(o => o.status==="IN_PROGRESS").length || "0", icon: Activity, color: "purple" },
-          { label: "Completed/Reported", value: radiologyOrders.filter(o => ["COMPLETED","REPORTED"].includes(o.status)).length || "0", icon: FileImage, color: "green" },
+          { label: t('total'), value: radiologyOrders.length || "0", icon: Activity, color: "blue" },
+          { label: t('pending'), value: radiologyOrders.filter(o => o.status==="PENDING").length || "0", icon: Activity, color: "yellow" },
+          { label: t('inProgress'), value: radiologyOrders.filter(o => o.status==="IN_PROGRESS").length || "0", icon: Activity, color: "purple" },
+          { label: t('completedReported'), value: radiologyOrders.filter(o => ["COMPLETED","REPORTED"].includes(o.status)).length || "0", icon: FileImage, color: "green" },
         ].map((stat, i) => (
           <div key={i} className="bg-white/60 backdrop-blur-md rounded-xl shadow-soft p-5 border border-gray-100 flex justify-between items-center">
             <div>
@@ -454,7 +456,7 @@ export function Radiology() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Search by ID, patient, or study type..."
+              placeholder={t('searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
@@ -463,19 +465,19 @@ export function Radiology() {
         </div>
 
         {loading ? (
-          <p className="text-center py-10 text-gray-500">Loading...</p>
+          <p className="text-center py-10 text-gray-500">{t('loading')}</p>
         ) : (
           <div className="overflow-x-auto">
             <DataTable
               data={filtered}
               columns={[
-                { header: "Order ID", accessor: "orderId" },
-                { header: "Patient", accessor: "patientName" },
-                { header: "Study Type", accessor: "studyType" },
-                { header: "Ordered By", accessor: "orderedBy" },
-                { header: "Date", accessor: (r) => (r.orderedDate ? new Date(r.orderedDate).toLocaleDateString() : "") },
+                { header: t('orderId'), accessor: "orderId" },
+                { header: t('patient'), accessor: "patientName" },
+                { header: t('studyType'), accessor: "studyType" },
+                { header: t('orderedBy'), accessor: "orderedBy" },
+                { header: t('date'), accessor: (r) => (r.orderedDate ? new Date(r.orderedDate).toLocaleDateString() : "") },
                 {
-                  header: "Status",
+                  header: t('status'),
                   accessor: (r) => (
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(r.status)}`}>
                       {r.status?.replace("_", " ") || ""}
@@ -483,12 +485,12 @@ export function Radiology() {
                   ),
                 },
                 {
-                  header: "Actions",
+                  header: t('actions'),
                   accessor: (r) => (
                     <div className="flex items-center gap-2">
-                      <button onClick={() => openEdit(r)} className="px-3 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">Edit</button>
-                      <button onClick={() => handleDelete(r.id)} className="px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded-lg">Delete</button>
-                      {["REPORTED","COMPLETED"].includes(r.status) && <button className="px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded-lg">View Report</button>}
+                      <button onClick={() => openEdit(r)} className="px-3 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">{t('edit')}</button>
+                      <button onClick={() => handleDelete(r.id)} className="px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded-lg">{t('delete')}</button>
+                      {["REPORTED","COMPLETED"].includes(r.status) && <button className="px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded-lg">{t('viewReport')}</button>}
                     </div>
                   ),
                 },
@@ -499,14 +501,14 @@ export function Radiology() {
       </div>
 
       {/* Modal (create / edit) */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingOrder ? "Edit Radiology Order" : "Create Radiology Order"} size="md">
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingOrder ? t('editRadiologyOrder') : t('createRadiologyOrder')} size="md">
         <form onSubmit={handleSubmit} className="space-y-4">
           {[
-            { label: "Order ID", key: "orderId", type: "text" },
-            { label: "Patient Name", key: "patientName", type: "text" },
-            { label: "Study Type", key: "studyType", type: "text" },
-            { label: "Ordered By (Doctor)", key: "orderedBy", type: "text" },
-            { label: "Ordered Date", key: "orderedDate", type: "date" },
+            { label: t('orderId'), key: "orderId", type: "text" },
+            { label: t('patientName'), key: "patientName", type: "text" },
+            { label: t('studyType'), key: "studyType", type: "text" },
+            { label: t('orderedByDoctor'), key: "orderedBy", type: "text" },
+            { label: t('orderedDate'), key: "orderedDate", type: "date" },
           ].map((f) => (
             <div key={f.key}>
               <label className="block text-sm font-medium text-gray-700 mb-1">{f.label}</label>
@@ -521,19 +523,19 @@ export function Radiology() {
           ))}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('statusLabel')}</label>
             <select value={form.status} onChange={(e) => setForm(prev => ({ ...prev, status: e.target.value }))} className="w-full border border-gray-300 rounded-lg p-2 text-sm sm:text-base">
-              <option value="PENDING">Pending</option>
-              <option value="IN_PROGRESS">In Progress</option>
-              <option value="COMPLETED">Completed</option>
-              <option value="REPORTED">Reported</option>
+              <option value="PENDING">{t('pending_status')}</option>
+              <option value="IN_PROGRESS">{t('in_progress_status')}</option>
+              <option value="COMPLETED">{t('completed_status')}</option>
+              <option value="REPORTED">{t('reported_status')}</option>
             </select>
           </div>
 
           <div className="flex justify-end gap-3 pt-2">
-            <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
+            <Button onClick={() => setIsModalOpen(false)}>{t('cancel')}</Button>
             <Button type="submit" className="bg-blue-600 text-white" disabled={submitting}>
-              {submitting ? (editingOrder ? "Saving..." : "Creating...") : (editingOrder ? "Save Changes" : "Add Order")}
+              {submitting ? (editingOrder ? t('saving') : t('creating')) : (editingOrder ? t('saveChanges') : t('addOrder'))}
             </Button>
           </div>
         </form>

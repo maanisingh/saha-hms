@@ -496,11 +496,13 @@ import axios from "axios";
 import { UserCog, Search, Plus, Edit2, Eye, Trash2 } from "../lib/icons";
 import { Button } from "../components/common/Button";
 import { DataTable } from "../components/common/DataTable";
+import { useTranslation } from 'react-i18next';
 
 const API_BASE_URL = "http://localhost:5000/api/attendance";
 const STAFF_API = "http://localhost:5000/api/enployees";
 
 export function Attendance() {
+  const { t } = useTranslation('attendance');
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStaff, setFilterStaff] = useState("ALL");
   const [filterDate, setFilterDate] = useState("");
@@ -676,7 +678,7 @@ export function Attendance() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mt-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Staff Attendance</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
           <p className="text-gray-600 text-sm">
             Manage attendance records
           </p>

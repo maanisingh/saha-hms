@@ -281,8 +281,10 @@
 import { useState } from "react";
 import { Plus } from "../lib/icons";
 import { Button } from "../components/common/Button";
+import { useTranslation } from 'react-i18next';
 
 export function Billing() {
+  const { t } = useTranslation('billing');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [invoices, setInvoices] = useState([
     {
@@ -362,14 +364,14 @@ export function Billing() {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mt-10">
         <div className="">
           <h1 className="text-3xl font-display font-bold text-gray-900">
-            Billing
+            {t('title')}
           </h1>
           <p className="text-gray-600 mt-1">
-            Manage invoices and payment records
+            {t('subtitle')}
           </p>
         </div>
         <Button icon={Plus} onClick={() => setIsModalOpen(true)}>
-          Create Invoice
+          {t('createInvoice')}
         </Button>
       </div>
 
@@ -384,18 +386,18 @@ export function Billing() {
               ✕
             </button>
             <h2 className="text-2xl font-bold mb-6 text-center">
-              Create New Invoice
+              {t('createNewInvoice')}
             </h2>
 
             <form className="space-y-4" onSubmit={handleCreateInvoice}>
               {/* Form Fields */}
               {[
-                { label: "Invoice Number", name: "invoiceNo", type: "text" },
-                { label: "Patient Name", name: "patientName", type: "text" },
-                { label: "Services", name: "services", type: "text" },
-                { label: "Total Amount (₹)", name: "amount", type: "number" },
-                { label: "Amount Paid (₹)", name: "paid", type: "number" },
-                { label: "Invoice Date", name: "date", type: "date" },
+                { label: t('invoiceNumber'), name: "invoiceNo", type: "text" },
+                { label: t('patientName'), name: "patientName", type: "text" },
+                { label: t('services'), name: "services", type: "text" },
+                { label: t('totalAmount'), name: "amount", type: "number" },
+                { label: t('amountPaid'), name: "paid", type: "number" },
+                { label: t('invoiceDate'), name: "date", type: "date" },
               ].map((field) => (
                 <div key={field.name}>
                   <label className="block text-sm font-semibold mb-1">
@@ -419,7 +421,7 @@ export function Billing() {
               {/* Payment Status */}
               <div>
                 <label className="block text-sm font-semibold mb-1">
-                  Payment Status
+                  {t('paymentStatus')}
                 </label>
                 <select
                   className="w-full border rounded-lg p-2"
@@ -428,16 +430,16 @@ export function Billing() {
                     setNewInvoice({ ...newInvoice, status: e.target.value })
                   }
                 >
-                  <option value="PENDING">Pending</option>
-                  <option value="PARTIAL">Partial</option>
-                  <option value="PAID">Paid</option>
+                  <option value="PENDING">{t('pending')}</option>
+                  <option value="PARTIAL">{t('partial')}</option>
+                  <option value="PAID">{t('paidStatus')}</option>
                 </select>
               </div>
 
               {/* Submit */}
               <div className="pt-4">
                 <Button type="submit" className="w-full">
-                  Add Invoice
+                  {t('addInvoice')}
                 </Button>
               </div>
             </form>
@@ -451,14 +453,14 @@ export function Billing() {
           <thead className="bg-gray-100">
             <tr>
               {[
-                "Invoice No",
-                "Patient",
-                "Services",
-                "Amount",
-                "Paid",
-                "Balance",
-                "Date",
-                "Status",
+                t('invoiceNo'),
+                t('patient'),
+                t('services'),
+                t('amount'),
+                t('paid'),
+                t('balance'),
+                t('date'),
+                t('status'),
               ].map((head, i) => (
                 <th key={i} className="p-3 whitespace-nowrap">
                   {head}

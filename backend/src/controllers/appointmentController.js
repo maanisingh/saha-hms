@@ -137,7 +137,72 @@ export const getAllAppointments = async (req, res) => {
   }
 };
 
+// 📌 READ — Get My Appointments (for logged-in user)
+export const getMyAppointments = async (req, res) => {
+  try {
+    const userId = req.user?.id; // From auth middleware
 
+    if (!userId) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    // Simplified query - get appointments where user is the doctor
+    const appointments = await prisma.appointment.findMany({
+      where: {
+        isDeleted: false,
+        doctorId: Number(userId),
+      },
+      orderBy: { scheduledAt: "desc" },
+      include: {
+        patient: {
+          include: {
+            user: {
+              select: {
+                firstName: true,
+                lastName: true,
+                email: true,
+                phone: true,
+                gender: true,
+                dateOfBirth: true,
+              },
+            },
+          },
+        },
+        doctor: {
+          include: {
+            user: {
+              select: {
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
+            department: {
+              select: {
+                id: true,
+                name: true,
+                code: true,
+              },
+            },
+          },
+        },
+        department: {
+          select: {
+            id: true,
+            name: true,
+            code: true,
+            type: true,
+          },
+        },
+      },
+    });
+
+    res.status(200).json(appointments);
+  } catch (error) {
+    console.error("❌ Error fetching my appointments:", error);
+    res.status(500).json({ message: "Error fetching appointment", error: error.message });
+  }
+};
 
 // 📌 READ — Get Appointment by ID
 export const getAppointmentById = async (req, res) => {

@@ -344,8 +344,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "../components/common/Button";
 import { X, Edit2, Trash2, Plus } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 
 export default function Prescriptions() {
+  const { t } = useTranslation('prescriptions');
   const [prescriptions, setPrescriptions] = useState([]);
   const [patients, setPatients] = useState([]);
   const [doctors, setDoctors] = useState([]);
@@ -490,7 +492,7 @@ export default function Prescriptions() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Delete this prescription?")) return;
+    if (!window.confirm(t('deleteConfirm'))) return;
     try {
       await axios.delete(`${API_BASE}/prescriptions/${id}`);
       await fetchAllPrescriptions();
@@ -537,7 +539,7 @@ export default function Prescriptions() {
           }}
           className="w-full sm:w-auto"
         >
-          Add Prescription
+          {t('addPrescription')}
         </Button>
       </div>
 
@@ -554,20 +556,20 @@ export default function Prescriptions() {
             </button>
 
             <h2 className="text-xl font-semibold mb-6 text-center">
-              {editingId ? "Edit Prescription" : "Add Prescription"}
+              {editingId ? t('editPrescription') : t('addNewPrescription')}
             </h2>
 
             {/* PATIENT & DOCTOR */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="text-sm font-medium">Patient</label>
+                <label className="text-sm font-medium">{t('patient')}</label>
                 <select
                   className="w-full border rounded-lg p-2 mt-1"
                   name="patientId"
                   value={formData.patientId}
                   onChange={handleChange}
                 >
-                  <option value="">Select Patient</option>
+                  <option value="">{t('selectPatient')}</option>
                   {patients.map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.user?.firstName} {p.user?.lastName}
@@ -577,14 +579,14 @@ export default function Prescriptions() {
               </div>
 
               <div>
-                <label className="text-sm font-medium">Doctor</label>
+                <label className="text-sm font-medium">{t('doctor')}</label>
                 <select
                   className="w-full border rounded-lg p-2 mt-1"
                   name="doctorId"
                   value={formData.doctorId}
                   onChange={handleChange}
                 >
-                  <option value="">Select Doctor</option>
+                  <option value="">{t('selectDoctor')}</option>
                   {doctors.map((d) => (
                     <option key={d.id} value={d.id}>
                       {d.fullName} — {d.speciality}
@@ -596,7 +598,7 @@ export default function Prescriptions() {
 
             {/* NOTES */}
             <div>
-              <label className="text-sm font-medium">Notes</label>
+              <label className="text-sm font-medium">{t('notes')}</label>
               <textarea
                 className="w-full border rounded-lg p-2 mt-2"
                 rows={2}
@@ -609,9 +611,9 @@ export default function Prescriptions() {
             {/* MEDICINES */}
             <div className="mt-6">
               <div className="flex justify-between items-center">
-                <h3 className="font-semibold text-lg">Medicines</h3>
+                <h3 className="font-semibold text-lg">{t('medicines')}</h3>
                 <Button icon={Plus} onClick={addItem}>
-                  Add Item
+                  {t('addMedicine')}
                 </Button>
               </div>
 
@@ -628,7 +630,7 @@ export default function Prescriptions() {
                       }
                       className="border rounded-lg p-2"
                     >
-                      <option>Select Medicine</option>
+                      <option>{t('selectMedicine')}</option>
                       {medicines.map((m) => (
                         <option key={m.id} value={m.id}>
                           {m.brandName} — {m.strength}
@@ -638,7 +640,7 @@ export default function Prescriptions() {
 
                     <input
                       type="text"
-                      placeholder="Dosage"
+                      placeholder={t('dosage')}
                       value={item.dosage}
                       onChange={(e) =>
                         handleItemChange(index, "dosage", e.target.value)
@@ -648,7 +650,7 @@ export default function Prescriptions() {
 
                     <input
                       type="number"
-                      placeholder="Qty"
+                      placeholder={t('quantity')}
                       value={item.quantity}
                       onChange={(e) =>
                         handleItemChange(index, "quantity", e.target.value)
@@ -658,7 +660,7 @@ export default function Prescriptions() {
 
                     <input
                       type="number"
-                      placeholder="Days"
+                      placeholder={t('days')}
                       value={item.durationDays}
                       onChange={(e) =>
                         handleItemChange(index, "durationDays", e.target.value)
@@ -684,7 +686,7 @@ export default function Prescriptions() {
                 className="w-full sm:w-auto"
                 disabled={loading}
               >
-                {loading ? "Saving..." : editingId ? "Update" : "Save"}
+                {loading ? t('saving') : editingId ? t('update') : t('save')}
               </Button>
             </div>
           </div>
@@ -697,11 +699,11 @@ export default function Prescriptions() {
           <thead>
             <tr className="bg-gray-100 text-left text-sm">
               <th className="p-3">#</th>
-              <th className="p-3">Patient</th>
-              <th className="p-3">Doctor</th>
-              <th className="p-3">Medicines</th>
-              <th className="p-3">Notes</th>
-              <th className="p-3">Actions</th>
+              <th className="p-3">{t('patient')}</th>
+              <th className="p-3">{t('doctor')}</th>
+              <th className="p-3">{t('medicines')}</th>
+              <th className="p-3">{t('notes')}</th>
+              <th className="p-3">{t('actions')}</th>
             </tr>
           </thead>
 
@@ -736,7 +738,7 @@ export default function Prescriptions() {
                   colSpan="6"
                   className="text-center py-6 italic text-gray-500"
                 >
-                  No prescriptions found
+                  {t('noPrescriptionsFound')}
                 </td>
               </tr>
             )}

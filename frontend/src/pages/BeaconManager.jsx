@@ -4,9 +4,11 @@ import { Users, Plus, Search, Edit2, Trash2 } from "../lib/icons";
 import { DataTable } from "../components/common/DataTable";
 import { Button } from "../components/common/Button";
 import { Modal } from "../components/common/Modal";
+import { useTranslation } from 'react-i18next';
 
 // Form for Add/Edit Beacon
 function BeaconForm({ beacon, onSuccess }) {
+  const { t } = useTranslation('beaconManager');
   const [formData, setFormData] = useState({
     beaconCode: beacon?.beaconCode || "",
     zoneName: beacon?.zoneName || "",
@@ -31,7 +33,7 @@ function BeaconForm({ beacon, onSuccess }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-gray-700 font-medium">Beacon Code</label>
+        <label className="block text-gray-700 font-medium">{t('beaconCode')}</label>
         <input
           type="text"
           name="beaconCode"
@@ -42,7 +44,7 @@ function BeaconForm({ beacon, onSuccess }) {
         />
       </div>
       <div>
-        <label className="block text-gray-700 font-medium">Zone Name</label>
+        <label className="block text-gray-700 font-medium">{t('zoneName')}</label>
         <input
           type="text"
           name="zoneName"
@@ -53,7 +55,7 @@ function BeaconForm({ beacon, onSuccess }) {
         />
       </div>
       <div>
-        <label className="block text-gray-700 font-medium">Building</label>
+        <label className="block text-gray-700 font-medium">{t('building')}</label>
         <input
           type="text"
           name="building"
@@ -63,7 +65,7 @@ function BeaconForm({ beacon, onSuccess }) {
         />
       </div>
       <div>
-        <label className="block text-gray-700 font-medium">Floor</label>
+        <label className="block text-gray-700 font-medium">{t('floor')}</label>
         <input
           type="text"
           name="floor"
@@ -80,14 +82,15 @@ function BeaconForm({ beacon, onSuccess }) {
           onChange={handleChange}
           className="h-4 w-4"
         />
-        <label className="text-gray-700 font-medium">Active</label>
+        <label className="text-gray-700 font-medium">{t('active')}</label>
       </div>
-      <Button type="submit">{beacon ? "Update Beacon" : "Add Beacon"}</Button>
+      <Button type="submit">{beacon ? t('updateBeacon') : t('addBeacon')}</Button>
     </form>
   );
 }
 
 export function BeaconManager() {
+  const { t } = useTranslation('beaconManager');
   const [beacons, setBeacons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -153,8 +156,8 @@ export function BeaconManager() {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3 mt-10">
         <div>
-          <h1 className="text-3xl font-display font-bold text-gray-900">Beacon Manager</h1>
-          <p className="text-gray-600 mt-1">Manage hospital beacons (floors, zones, and status)</p>
+          <h1 className="text-3xl font-display font-bold text-gray-900">{t('title')}</h1>
+          <p className="text-gray-600 mt-1">{t('subtitle')}</p>
         </div>
         <Button
           icon={Plus}
@@ -163,7 +166,7 @@ export function BeaconManager() {
             setIsModalOpen(true);
           }}
         >
-          Add New Beacon
+          {t('addBeacon')}
         </Button>
       </div>
 
@@ -172,7 +175,7 @@ export function BeaconManager() {
         <div className="bg-white/60 backdrop-blur-md rounded-xl shadow-soft p-5 border border-gray-100">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Total Beacons</p>
+              <p className="text-sm text-gray-600">{t('totalBeacons')}</p>
               <p className="text-2xl font-bold text-gray-900 mt-1">{beacons.length}</p>
             </div>
             <div className="p-3 bg-blue-100 rounded-lg">
@@ -189,7 +192,7 @@ export function BeaconManager() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Search by code, zone, building, or floor..."
+              placeholder={t('searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -198,31 +201,31 @@ export function BeaconManager() {
         </div>
 
         {filteredBeacons.length === 0 ? (
-          <p className="text-gray-500 text-center py-8">No beacons found.</p>
+          <p className="text-gray-500 text-center py-8">{t('noBeacons')}</p>
         ) : (
           <div className="overflow-x-auto">
             <DataTable
               data={filteredBeacons}
               columns={[
-                { header: "Code", accessor: "beaconCode" },
-                { header: "Zone", accessor: "zoneName" },
-                { header: "Building", accessor: "building" },
-                { header: "Floor", accessor: "floor" },
+                { header: t('code'), accessor: "beaconCode" },
+                { header: t('zone'), accessor: "zoneName" },
+                { header: t('building'), accessor: "building" },
+                { header: t('floor'), accessor: "floor" },
                 {
-                  header: "Status",
+                  header: t('status'),
                   accessor: (b) =>
                     b.isActive ? (
                       <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                        Active
+                        {t('active')}
                       </span>
                     ) : (
                       <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                        Inactive
+                        {t('inactive')}
                       </span>
                     ),
                 },
                 {
-                  header: "Actions",
+                  header: t('actions'),
                   accessor: (b) => (
                     <div className="flex items-center gap-2">
                       <button
@@ -256,7 +259,7 @@ export function BeaconManager() {
           setIsModalOpen(false);
           setSelectedBeacon(null);
         }}
-        title={selectedBeacon ? "Edit Beacon" : "Add New Beacon"}
+        title={selectedBeacon ? t('editBeacon') : t('addBeacon')}
       >
         <BeaconForm beacon={selectedBeacon} onSuccess={handleBeaconSave} />
       </Modal>

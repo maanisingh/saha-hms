@@ -561,8 +561,10 @@ import { laboratoryApi } from "../../services/api/laboratory";
 import { radiologyApi } from "../../services/api/radiology";
 import { prescriptionsApi } from "../../services/api/prescriptions";
 import { useAuth } from "../../context/AuthContext";
+import { useTranslation } from 'react-i18next';
 
 export function DoctorDashboard() {
+  const { t } = useTranslation('doctorDashboard');
   const { user } = useAuth();
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -700,20 +702,20 @@ export function DoctorDashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-10">
         <div>
           <h1 className="text-2xl sm:text-3xl font-display font-bold text-gray-900">
-            Doctor Dashboard
+            {t('title')}
           </h1>
           <p className="text-gray-600 mt-1 text-sm sm:text-base">
-            Welcome back, Doctor
+            {t('welcomeBack')}
           </p>
         </div>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <StatsCard title="Today's Appointments" value={stats.total.toString()} icon={Calendar} color="blue" />
-        <StatsCard title="Waiting" value={stats.waiting.toString()} icon={Clock} color="yellow" />
-        <StatsCard title="In Consultation" value={stats.inProgress.toString()} icon={Users} color="purple" />
-        <StatsCard title="Completed" value={stats.completed.toString()} icon={CheckCircle} color="green" />
+        <StatsCard title={t('todaysAppointments')} value={stats.total.toString()} icon={Calendar} color="blue" />
+        <StatsCard title={t('waiting')} value={stats.waiting.toString()} icon={Clock} color="yellow" />
+        <StatsCard title={t('inConsultation')} value={stats.inProgress.toString()} icon={Users} color="purple" />
+        <StatsCard title={t('completed')} value={stats.completed.toString()} icon={CheckCircle} color="green" />
       </div>
 
       {/* Content Section */}
@@ -722,35 +724,35 @@ export function DoctorDashboard() {
         <div className="lg:col-span-2 order-2 lg:order-1">
           <div className="bg-white/70 backdrop-blur-md rounded-xl shadow-soft p-4 sm:p-6 border border-gray-100 overflow-x-auto">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">
-              Today's Appointment Queue
+              {t('todaysAppointmentQueue')}
             </h2>
             {loading ? (
               <div className="text-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
                 <p className="text-gray-600 mt-2 text-sm sm:text-base">
-                  Loading appointments...
+                  {t('loadingAppointments')}
                 </p>
               </div>
             ) : (
               <DataTable
                 data={appointments}
                 columns={[
-                  { header: "Token", accessor: "token_number" },
+                  { header: t('token'), accessor: "token_number" },
                   {
-                    header: "Patient",
+                    header: t('patient'),
                     accessor: (row) =>
                       row.patient
                         ? `${row.patient.first_name} ${row.patient.last_name}`
                         : "N/A",
                   },
                   {
-                    header: "Time",
+                    header: t('time'),
                     accessor: (row) =>
                       new Date(row.scheduled_at).toLocaleTimeString(),
                   },
-                  { header: "Type", accessor: "type" },
+                  { header: t('type'), accessor: "type" },
                   {
-                    header: "Status",
+                    header: t('status'),
                     accessor: (row) => (
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
@@ -762,7 +764,7 @@ export function DoctorDashboard() {
                     ),
                   },
                   {
-                    header: "Actions",
+                    header: t('actions'),
                     accessor: (row) => (
                       <div className="flex flex-wrap gap-2">
                         {row.status === "CHECKED_IN" && (
@@ -770,7 +772,7 @@ export function DoctorDashboard() {
                             onClick={() => handleStartConsultation(row.id)}
                             className="px-3 py-1 text-xs sm:text-sm text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
                           >
-                            Start
+                            {t('start')}
                           </button>
                         )}
                         {row.status === "IN_CONSULTATION" && (
@@ -778,7 +780,7 @@ export function DoctorDashboard() {
                             onClick={() => handleCompleteConsultation(row.id)}
                             className="px-3 py-1 text-xs sm:text-sm text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                           >
-                            Complete
+                            {t('complete')}
                           </button>
                         )}
                       </div>
@@ -794,37 +796,37 @@ export function DoctorDashboard() {
         <div className="space-y-6 order-1 lg:order-2">
           {/* Quick Actions */}
           <div className="bg-white/70 backdrop-blur-md rounded-xl shadow-soft p-4 sm:p-6 border border-gray-100">
-            <h3 className="font-bold text-gray-900 mb-4">Quick Actions</h3>
+            <h3 className="font-bold text-gray-900 mb-4">{t('quickActions')}</h3>
             <div className="space-y-2">
               <Button variant="outline" className="w-full justify-start" onClick={handleViewPatients}>
-                <Users className="w-4 h-4 mr-2" /> View Patients
+                <Users className="w-4 h-4 mr-2" /> {t('viewPatients')}
               </Button>
               <Button variant="outline" className="w-full justify-start" onClick={handleViewLabOrders}>
-                <FlaskConical className="w-4 h-4 mr-2" /> Lab Orders
+                <FlaskConical className="w-4 h-4 mr-2" /> {t('labOrders')}
               </Button>
               <Button variant="outline" className="w-full justify-start" onClick={handleViewRadiologyOrders}>
-                <Activity className="w-4 h-4 mr-2" /> Radiology Orders
+                <Activity className="w-4 h-4 mr-2" /> {t('radiologyOrders')}
               </Button>
               <Button variant="outline" className="w-full justify-start" onClick={handleViewPrescriptions}>
-                <FileText className="w-4 h-4 mr-2" /> Prescriptions
+                <FileText className="w-4 h-4 mr-2" /> {t('prescriptions')}
               </Button>
             </div>
           </div>
 
           {/* Summary */}
           <div className="bg-white/70 backdrop-blur-md rounded-xl shadow-soft p-4 sm:p-6 border border-gray-100">
-            <h3 className="font-bold text-gray-900 mb-4">Today's Summary</h3>
+            <h3 className="font-bold text-gray-900 mb-4">{t('todaysSummary')}</h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                <span className="text-sm font-medium">Total Appointments</span>
+                <span className="text-sm font-medium">{t('totalAppointments')}</span>
                 <span className="font-bold text-blue-600">{stats.total}</span>
               </div>
               <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                <span className="text-sm font-medium">Completed</span>
+                <span className="text-sm font-medium">{t('completed')}</span>
                 <span className="font-bold text-green-600">{stats.completed}</span>
               </div>
               <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
-                <span className="text-sm font-medium">Pending</span>
+                <span className="text-sm font-medium">{t('pending')}</span>
                 <span className="font-bold text-yellow-600">
                   {stats.waiting + stats.inProgress}
                 </span>

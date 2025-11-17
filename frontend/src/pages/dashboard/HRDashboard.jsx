@@ -219,6 +219,7 @@ import { AddEmployeeModal } from "../../components/hr/AddEmployeeModal";
 import { ManageShiftsModal } from "../../components/hr/ManageShiftsModal";
 import { ProcessPayrollModal } from "../../components/hr/ProcessPayrollModal";
 import { PerformanceReviewModal } from "../../components/hr/PerformanceReviewModal";
+import { useTranslation } from 'react-i18next';
 
 export default function HRDashboard() {
   const [showAddEmployee, setShowAddEmployee] = useState(false);

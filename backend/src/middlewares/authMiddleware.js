@@ -17,3 +17,6 @@ export const verifyToken = (req, res, next) => {
     return res.status(403).json({ message: "Invalid or expired token" });
   }
 };
+
+// Alias for compatibility
+export const authenticateToken = verifyToken;

@@ -24,5 +24,19 @@ export default defineConfig({
     host: '0.0.0.0',
     strictPort: false,
     open: false,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8100',
+        changeOrigin: true,
+      }
+    }
   },
+  preview: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8100',
+        changeOrigin: true,
+      }
+    }
+  }
 })
